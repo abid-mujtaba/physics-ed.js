@@ -77,4 +77,6 @@ function makeXAxis(start = -8, finish = 8, step = 1, ypos = 0, width = 80, exten
 	}
 
 	two.add(xAxis);			// Objects created using the Two.<constructor> have to be added explicitly
+
+	return spacing;
 }
