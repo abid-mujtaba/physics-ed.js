@@ -1,16 +1,25 @@
-var two;
-var dims;		// Global Dimensions object
+/** 
+ * This script requires: 	two.js, physics-ed.js
+ */
 
-// Requires: 	two.js
-//				physics-ed.js
+/** Global Variables */
+var two;		// Two scene
+var dims;		// Global Dimensions object that converts between percentage and actual pixel position values
 
 
+
+/**
+ * Initialize the entire animation.
+ */
 function init() {
 	
 	setupScene();
 }
 	
 
+/**
+ * Create the root scene, add the required elements, set up any animation and start rendering/looping.
+ */
 function setupScene() {
 
 	var elem = document.getElementById('Scene');
@@ -25,4 +34,5 @@ function setupScene() {
 }
 
 
+/** Start the animation when the window finishes loading. */
 window.onload = init;
