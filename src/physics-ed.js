@@ -58,7 +58,7 @@ function initScene(width, height, elem) {
  *	@param {float} ypos - y-position of the x-axis in y-percent
  *	@param {float} width - Required total width of the axis in x-percent (see Dimensions)
  *	@param {float} extension - Distance (in x-percent) to extend axis beyond end-most ticks (and specified width)
- *	@returns {float} - The spacing in pixels corresponding to one unit on the axis (used to align the y-axis if the x-axis is off-center).
+ *	@returns {Two.Group} - Return the Two.Group corresponding to the x-axis.
  */
 function makeXAxis(start = -8, finish = 8, step = 1, ypos = 0, width = 80, extension = 3) {
 	
@@ -76,9 +76,10 @@ function makeXAxis(start = -8, finish = 8, step = 1, ypos = 0, width = 80, exten
 		xAxis.add(new Two.Text(i, dims.X((i - center) * spacing), dims.Y(ypos - 5)));
 	}
 
+	xAxis.spacing = spacing;		// Append the spacing to the object
 	two.add(xAxis);			// Objects created using the Two.<constructor> have to be added explicitly
 
-	return spacing;
+	return xAxis;
 }
 
 
@@ -103,7 +104,8 @@ function makeYAxis(start = -8, finish = 8, step = 1, xpos = 0, width = 80, exten
 		yAxis.add(new Two.Text(i, dims.X(xpos - 5), dims.Y((i - center) * spacing)));
 	}
 
+	yAxis.spacing = spacing;
 	two.add(yAxis);			// Objects created using the Two.<constructor> have to be added explicitly
 
-	return spacing;
+	return yAxis;
 }
