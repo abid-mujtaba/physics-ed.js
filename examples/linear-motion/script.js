@@ -26,8 +26,9 @@ function setupScene() {
 	two = initScene(window.innerWidth, window.innerHeight, elem);
 	dims = new Dimensions(two.width, two.height);
 
-	// Add x-axis
-	makeXAxis(-5, 3);
+	// Add axes
+	var xspacing = makeXAxis(-5, 3);
+	makeYAxis(-6, 6, 2, xpos = 1 * xspacing);		// Use the returned xspacing to shift the y-axis so that the zeros of the two axes align
 
 	// Render scene
 	two.update();

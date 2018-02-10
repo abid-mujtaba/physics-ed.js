@@ -80,3 +80,30 @@ function makeXAxis(start = -8, finish = 8, step = 1, ypos = 0, width = 80, exten
 
 	return spacing;
 }
+
+
+/**
+ * Make a y-axis Two.Group.
+ *
+ * Completely analogous to makeXAxis.
+ */
+function makeYAxis(start = -8, finish = 8, step = 1, xpos = 0, width = 80, extension = 3) {
+	
+	var spacing = width / (finish - start);
+	var center = (start + finish) / 2;		// Calculate the tick label of the center of the axis based on specified start and finish.
+											// To make sure that the entire axis is centered on the scene we have to shift all positions by this amount
+
+	var yAxis = new Two.Group();		// create empty group
+
+	yAxis.add(new Two.Line(dims.X(xpos), dims.Y(spacing * (start - center) - extension), dims.X(xpos), dims.Y(spacing * (finish - center) + extension)));		// Create main horizontal line
+	// 'start - center' shifts 'start' such that the created axis is centered on the center of the scene.
+
+	for (var i = start; i <= finish; i += step) {
+		yAxis.add(new Two.Line(dims.X(xpos - 2), dims.Y((i - center) * spacing), dims.X(xpos + 2), dims.Y((i - center) * spacing)));
+		yAxis.add(new Two.Text(i, dims.X(xpos - 5), dims.Y((i - center) * spacing)));
+	}
+
+	two.add(yAxis);			// Objects created using the Two.<constructor> have to be added explicitly
+
+	return spacing;
+}
