@@ -55,12 +55,12 @@ function initScene(width, height, elem) {
  *	@param {int} start - Left-most tick label of axis.
  *	@param {int} finish - Right-most tick label of axis.
  *	@param {int} step - Interval between successive ticks.
- *	@param {float} width - Required total width of the axis in x-percent (see Dimensions)
  *	@param {float} ypos - y-position of the x-axis in y-percent
+ *	@param {float} width - Required total width of the axis in x-percent (see Dimensions)
  *	@param {float} extension - Distance (in x-percent) to extend axis beyond end-most ticks (and specified width)
- *	@returns {Two.Group} - The constructed x-axis.
+ *	@returns {float} - The spacing in pixels corresponding to one unit on the axis (used to align the y-axis if the x-axis is off-center).
  */
-function makeXAxis(start = -8, finish = 8, step = 1, width = 80, ypos = 0, extension = 3) {
+function makeXAxis(start = -8, finish = 8, step = 1, ypos = 0, width = 80, extension = 3) {
 	
 	var spacing = width / (finish - start);
 	var center = (start + finish) / 2;		// Calculate the tick label of the center of the axis based on specified start and finish.
