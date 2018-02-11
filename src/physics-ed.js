@@ -57,6 +57,16 @@ class Dimensions {
 
 		return - yPercent * this.height / 100;		// The minus sign means positive y corresponds to vertically upward (the opposite of images)
 	}
+
+
+	/** Convert pixel value to percentage value. The inverse of .X(). */
+	invX(x) {
+		return x * 100 / this.width;
+	}
+
+	invY(y) {
+		return y * 100 / this.height;
+	}
 }
 
 /**
