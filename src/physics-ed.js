@@ -1,4 +1,20 @@
 /**
+ * An array with a modified reverse() method that takes a flag that determines if reversal will happen.
+ */
+class RArray extends Array {
+
+	/** @arg {boolean} flag - Reverse array, in-place, if true. */
+	reverse(flag = true) {
+
+		if (flag) 
+			super.reverse();		// Use the reverse method fo the super-class to carry out the actual reverssl.
+
+		return this;		// Like the superclass reverse() returns a handle to the object
+	}
+}
+
+
+/**
  * Normalizes window dimensions to 100 x 100.
  * @constructor stores the passed in width and height of the rendering scene
  */
