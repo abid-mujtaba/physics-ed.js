@@ -98,10 +98,18 @@ function makeXAxis(start, finish, step = 1, ypos = 0, width = 80, extension = 3)
 	var center = (start + finish) / 2;		// Calculate the tick label of the center of the axis based on specified start and finish.
 											// To make sure that the entire axis is centered on the scene we have to shift all positions by this amount
 
+	// Calculate the start and finish positions in absolute pixel values after incorporating the center of the axis, the spacing between ticks, and the extension
+	// 'start - center' shifts 'start' such that the created axis is centered on the center of the scene.
+	var absStart = dims.X( (start - center) * spacing - extension );
+	var absFinish = dims.X( (finish - center) * spacing + extension );
+
 	var xAxis = new Axis();			// create empty Axis (essentially a Two.Group)
 
-	xAxis.add(new Two.Line(dims.X(spacing * (start - center) - extension), dims.Y(ypos), dims.X(spacing * (finish - center) + extension), dims.Y(ypos)));		// Create main horizontal line
-	// 'start - center' shifts 'start' such that the created axis is centered on the center of the scene.
+	xAxis.add(new Two.Line(absStart, dims.Y(ypos), absFinish, dims.Y(ypos)));		// Create main horizontal line
+	
+	// Add arrow to the right of the axis line
+	xAxis.add(new Two.Line(absFinish, dims.Y(ypos), absFinish - dims.X(1.5), dims.Y(ypos + 3)));
+	xAxis.add(new Two.Line(absFinish, dims.Y(ypos), absFinish - dims.X(1.5), dims.Y(ypos - 3)));
 
 	for (var i = start; i <= finish; i += step) {
 

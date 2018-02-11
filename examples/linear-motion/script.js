@@ -26,10 +26,9 @@ function setupScene() {
 	two = initScene(window.innerWidth, window.innerHeight, elem);
 	dims = new Dimensions(two.width, two.height);
 
-	// Add axes	
-	// Since we have two axes we suppress the zero tick and label to avoid the overlap
-	var xAxis = makeXAxis(-5, 3).suppressZero();
-	makeYAxis(-6, 6, 2, xpos = 1 * xAxis.spacing).suppressZero();		// Use the returned xspacing to shift the y-axis so that the zeros of the two axes align
+	// Add x-axis	
+	var xAxis = makeXAxis(-8, 8, 2).suppressZero();
+	makeYAxis(-4,4).suppressZero();
 
 	// Render scene
 	two.update();
