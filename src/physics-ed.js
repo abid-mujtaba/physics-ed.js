@@ -30,9 +30,9 @@ class Dimensions {
  * 
  * Translates the scene so that its center (0,0) matches with the center of the specified element.
  * 
- * @param {float} width - Width of the scene (in pixels).
- * @param {float} height - Height of the scene (in pixels).
- * @param {DOM.Element} elem - The domElement that will contain the scene, usually a <div>. 
+ * @arg {float} width - Width of the scene (in pixels).
+ * @arg {float} height - Height of the scene (in pixels).
+ * @arg {DOM.Element} elem - The domElement that will contain the scene, usually a <div>. 
  * @returns {Two} - Root scene object.
  */
 function initScene(width, height, elem) {
@@ -52,12 +52,12 @@ function initScene(width, height, elem) {
  *	The center of the drawn line is at the center of the screen (0,0) regardless of where the 0 value of the axis might be. Use 'translate' to move the created group around.
  *  Assumes that initScene() and new Dimensions() has been called.
  * 
- *	@param {int} start - Left-most tick label of axis.
- *	@param {int} finish - Right-most tick label of axis.
- *	@param {int} step - Interval between successive ticks.
- *	@param {float} ypos - y-position of the x-axis in y-percent
- *	@param {float} width - Required total width of the axis in x-percent (see Dimensions)
- *	@param {float} extension - Distance (in x-percent) to extend axis beyond end-most ticks (and specified width)
+ *	@arg {int} start - Left-most tick label of axis.
+ *	@arg {int} finish - Right-most tick label of axis.
+ *	@arg {int} step - Interval between successive ticks.
+ *	@arg {float} ypos - y-position of the x-axis in y-percent
+ *	@arg {float} width - Required total width of the axis in x-percent (see Dimensions)
+ *	@arg {float} extension - Distance (in x-percent) to extend axis beyond end-most ticks (and specified width)
  *	@returns {Two.Group} - Return the Two.Group corresponding to the x-axis.
  */
 function makeXAxis(start = -8, finish = 8, step = 1, ypos = 0, width = 80, extension = 3) {
