@@ -92,6 +92,23 @@ function initScene(width, height, elem) {
 
 
 /**
+ * Create an arrow-head centered at (0,0) and pointing to the right
+ */
+function makeArrowHead(pixelWidth = 13) {
+	
+	var arrowHead = new Two.Group();
+
+	// Add arrow to the right of the axis line
+	arrowHead.add(new Two.Line(0,0,-pixelWidth, pixelWidth));
+	arrowHead.add(new Two.Line(0,0,-pixelWidth,-pixelWidth));
+
+	arrowHead.pixelWidth = pixelWidth;
+
+	return arrowHead;
+}
+
+
+/**
  * xAxis and yAxis are instances of this subclass of Two.Group
  */
 class Axis extends Two.Group {
@@ -150,9 +167,11 @@ function makeAxis(flip = false, start, finish, step = 1, ppos = 0, width = 80, e
 
 	axis.add(new Two.Line(dims.X(absStart), dims.Y(ppos), dims.X(absFinish), dims.Y(ppos)));		// Create main horizontal line
 	
-	// Add arrow to the right of the axis line
-	axis.add(new Two.Line(dims.X(absFinish), dims.Y(ppos), dims.X(absFinish - 1), dims.Y(ppos + 2)));
-	axis.add(new Two.Line(dims.X(absFinish), dims.Y(ppos), dims.X(absFinish - 1), dims.Y(ppos - 2)));
+	// Add arrow head
+	var arrowHead = makeArrowHead();
+	arrowHead.translation.set(dims.X(absFinish), dims.Y(ppos));
+	axis.add(arrowHead);
+	axis.arrowHead.pixelWidth = arrowHead.pixelWidth;		// Store the arrowHead pixelWidth for reuse in second axis for matching
 
 	for (var i = start; i <= finish; i += step) {
 
@@ -170,6 +189,8 @@ function makeAxis(flip = false, start, finish, step = 1, ppos = 0, width = 80, e
 
 	axis.spacing = spacing;		// Append the spacing to the object
 	two.add(axis);			// Objects created using the Two.<constructor> have to be added explicitly
+
+	axis.linewidth = 1.5;
 
 	return axis;
 }
