@@ -72,8 +72,21 @@ function makeXAxis(start = -8, finish = 8, step = 1, ypos = 0, width = 80, exten
 	// 'start - center' shifts 'start' such that the created axis is centered on the center of the scene.
 
 	for (var i = start; i <= finish; i += step) {
-		xAxis.add(new Two.Line(dims.X((i - center) * spacing), dims.Y(ypos - 2), dims.X((i - center) * spacing), dims.Y(ypos + 2)));
-		xAxis.add(new Two.Text(i, dims.X((i - center) * spacing), dims.Y(ypos - 5)));
+
+		var tick = new Two.Line(dims.X((i - center) * spacing), dims.Y(ypos - 2), dims.X((i - center) * spacing), dims.Y(ypos + 2));
+		var label = new Two.Text(i, dims.X((i - center) * spacing), dims.Y(ypos - 5));
+
+		xAxis.add(tick);
+		xAxis.add(label);
+
+		if (i == 0) {						// If there is a zero-tick we store the tick and label so we can remove it later if required
+			xAxis.zeroTick = tick;
+			xAxis.zeroLabel = label;
+		}
+
+		xAxis.suppressZero = function () {						// A function that removes the zero tick and label
+			xAxis.remove(xAxis.zeroTick, xAxis.zeroLabel);
+		}
 	}
 
 	xAxis.spacing = spacing;		// Append the spacing to the object

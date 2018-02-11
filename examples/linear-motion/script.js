@@ -30,6 +30,8 @@ function setupScene() {
 	var xAxis = makeXAxis(-5, 3);
 	makeYAxis(-6, 6, 2, xpos = 1 * xAxis.spacing);		// Use the returned xspacing to shift the y-axis so that the zeros of the two axes align
 
+	xAxis.suppressZero();			// Since we have two axes we suppress the zero tick and label to avoid the overlap
+
 	// Render scene
 	two.update();
 }
