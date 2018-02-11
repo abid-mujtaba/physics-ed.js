@@ -46,6 +46,29 @@ function initScene(width, height, elem) {
 	return two;
 }
 
+
+/**
+ * xAxis and yAxis are instances of this subclass of Two.Group
+ */
+class Axis extends Two.Group {
+	
+	/**
+	 * Store handles to the Two-objects corresponding to the tick and label of the zero point on the axis.
+	 *
+	 * @arg {Two.Line} 
+	 */
+	declareZero(tick, label) {
+
+		this.zeroTick = tick;
+		this.zeroLabel = label;
+	}
+
+	suppressZero() {
+		
+		this.remove(this.zeroTick, this.zeroLabel);
+	}
+}
+
 /**
  *	Make an x-axis Two.Group.
  *
@@ -66,7 +89,7 @@ function makeXAxis(start = -8, finish = 8, step = 1, ypos = 0, width = 80, exten
 	var center = (start + finish) / 2;		// Calculate the tick label of the center of the axis based on specified start and finish.
 											// To make sure that the entire axis is centered on the scene we have to shift all positions by this amount
 
-	var xAxis = new Two.Group();		// create empty group
+	var xAxis = new Axis();			// create empty Axis (essentially a Two.Group)
 
 	xAxis.add(new Two.Line(dims.X(spacing * (start - center) - extension), dims.Y(ypos), dims.X(spacing * (finish - center) + extension), dims.Y(ypos)));		// Create main horizontal line
 	// 'start - center' shifts 'start' such that the created axis is centered on the center of the scene.
@@ -80,12 +103,7 @@ function makeXAxis(start = -8, finish = 8, step = 1, ypos = 0, width = 80, exten
 		xAxis.add(label);
 
 		if (i == 0) {						// If there is a zero-tick we store the tick and label so we can remove it later if required
-			xAxis.zeroTick = tick;
-			xAxis.zeroLabel = label;
-		}
-
-		xAxis.suppressZero = function () {						// A function that removes the zero tick and label
-			xAxis.remove(xAxis.zeroTick, xAxis.zeroLabel);
+			xAxis.declareZero(tick, label);
 		}
 	}
 
