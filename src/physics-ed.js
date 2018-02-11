@@ -15,6 +15,23 @@ class RArray extends Array {
 
 
 /**
+ * Map functions from the first array to arguments in the second array in a one-to-one fashion to create an array of answers.
+ * @arg {Array} functions - Array of functions to be applied.
+ * @arg {Array} args - Array of arguments, one for each function in the first array.
+ * @returns {Array} - The result of applying functions to corresponding arguments.
+ */
+ function zipFunctions(functions, args) {
+
+ 	var results = [];
+ 	
+ 	for (i = 0; i < functions.length; i++)
+ 		results.push( functions[i]( args[i] ) );		// For each i apply the corresponding function to the corresponding argument adn store it in 'results'
+
+ 	return results;
+}
+
+
+/**
  * Normalizes window dimensions to 100 x 100.
  * @constructor stores the passed in width and height of the rendering scene
  */
