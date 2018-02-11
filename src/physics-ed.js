@@ -10,6 +10,7 @@ class Dimensions {
 
 	/**
 	 * Convert x-position in percentage of screen width to actual pixel value.
+	 *
 	 * @arg {float} xPercent - x-position in terms of percentage of the scene width. Can be negative. 
 	 * @returns {float} - x-position in actual pixels calculated using the internally stored width of the scene. 
 	 */
@@ -55,7 +56,8 @@ class Axis extends Two.Group {
 	/**
 	 * Store handles to the Two-objects corresponding to the tick and label of the zero point on the axis.
 	 *
-	 * @arg {Two.Line} 
+	 * @arg {Two.Line} tick - Tick of the zero point on the axis.
+	 * @arg {Two.Text} label - Label of the zero point on the axis.
 	 */
 	declareZero(tick, label) {
 
@@ -63,11 +65,18 @@ class Axis extends Two.Group {
 		this.zeroLabel = label;
 	}
 
+	/** 
+	 * Remove the zero-point tick and label form the axis
+	 * @{returns} The Axis object (to allow chaining).
+	 */
 	suppressZero() {
 		
 		this.remove(this.zeroTick, this.zeroLabel);
+
+		return this;		// Return a handle to the object itselt so that one can chain with this method.
 	}
 }
+
 
 /**
  *	Make an x-axis Two.Group.
@@ -122,21 +131,26 @@ function makeXAxis(start = -8, finish = 8, step = 1, ypos = 0, width = 80, exten
 function makeYAxis(start = -8, finish = 8, step = 1, xpos = 0, width = 80, extension = 3) {
 	
 	var spacing = width / (finish - start);
-	var center = (start + finish) / 2;		// Calculate the tick label of the center of the axis based on specified start and finish.
-											// To make sure that the entire axis is centered on the scene we have to shift all positions by this amount
+	var center = (start + finish) / 2;
 
-	var yAxis = new Two.Group();		// create empty group
+	var yAxis = new Axis();
 
-	yAxis.add(new Two.Line(dims.X(xpos), dims.Y(spacing * (start - center) - extension), dims.X(xpos), dims.Y(spacing * (finish - center) + extension)));		// Create main horizontal line
-	// 'start - center' shifts 'start' such that the created axis is centered on the center of the scene.
+	yAxis.add(new Two.Line(dims.X(xpos), dims.Y(spacing * (start - center) - extension), dims.X(xpos), dims.Y(spacing * (finish - center) + extension)));
 
 	for (var i = start; i <= finish; i += step) {
-		yAxis.add(new Two.Line(dims.X(xpos - 2), dims.Y((i - center) * spacing), dims.X(xpos + 2), dims.Y((i - center) * spacing)));
-		yAxis.add(new Two.Text(i, dims.X(xpos - 5), dims.Y((i - center) * spacing)));
+		var tick = new Two.Line(dims.X(xpos - 2), dims.Y((i - center) * spacing), dims.X(xpos + 2), dims.Y((i - center) * spacing));
+		var label = new Two.Text(i, dims.X(xpos - 5), dims.Y((i - center) * spacing));
+
+		yAxis.add(tick);
+		yAxis.add(label);
+
+		if (i == 0) {
+			yAxis.declareZero(tick, label);
+		}
 	}
 
 	yAxis.spacing = spacing;
-	two.add(yAxis);			// Objects created using the Two.<constructor> have to be added explicitly
+	two.add(yAxis);	
 
 	return yAxis;
 }
