@@ -95,7 +95,7 @@ class Axis extends Two.Group {
 
 
 /**
- *	Make an x-axis Two.Group.
+ *	Make an Axis Two.Group.
  *
  *	The center of the drawn line is at the center of the screen (0,0) regardless of where the 0 value of the axis might be. Use 'translate' to move the created group around.
  *  Assumes that initScene() and new Dimensions() has been called.
@@ -108,8 +108,8 @@ class Axis extends Two.Group {
  *	@arg {float} extension - Distance (in x-percent) to extend axis beyond end-most ticks (and specified width)
  *	@returns {Two.Group} - Return the Two.Group corresponding to the x-axis.
  */
-function makeXAxis(start, finish, step = 1, ypos = 0, width = 80, extension = 3) {
-	
+function makeAxis(flip = false, start, finish, step = 1, ypos = 0, width = 80, extension = 3) {
+
 	var spacing = width / (finish - start);
 	var center = (start + finish) / 2;		// Calculate the tick label of the center of the axis based on specified start and finish.
 											// To make sure that the entire axis is centered on the scene we have to shift all positions by this amount
@@ -119,31 +119,37 @@ function makeXAxis(start, finish, step = 1, ypos = 0, width = 80, extension = 3)
 	var absStart = (start - center) * spacing - extension;
 	var absFinish = (finish - center) * spacing + extension;
 
-	var xAxis = new Axis();			// create empty Axis (essentially a Two.Group)
+	var axis = new Axis();			// create empty Axis (essentially a Two.Group)
 
-	xAxis.add(new Two.Line(dims.X(absStart), dims.Y(ypos), dims.X(absFinish), dims.Y(ypos)));		// Create main horizontal line
+	axis.add(new Two.Line(dims.X(absStart), dims.Y(ypos), dims.X(absFinish), dims.Y(ypos)));		// Create main horizontal line
 	
 	// Add arrow to the right of the axis line
-	xAxis.add(new Two.Line(dims.X(absFinish), dims.Y(ypos), dims.X(absFinish) - dims.X(1.5), dims.Y(ypos + 3)));
-	xAxis.add(new Two.Line(dims.X(absFinish), dims.Y(ypos), dims.X(absFinish) - dims.X(1.5), dims.Y(ypos - 3)));
+	axis.add(new Two.Line(dims.X(absFinish), dims.Y(ypos), dims.X(absFinish) - dims.X(1.5), dims.Y(ypos + 3)));
+	axis.add(new Two.Line(dims.X(absFinish), dims.Y(ypos), dims.X(absFinish) - dims.X(1.5), dims.Y(ypos - 3)));
 
 	for (var i = start; i <= finish; i += step) {
 
 		var tick = new Two.Line(dims.X((i - center) * spacing), dims.Y(ypos - 2), dims.X((i - center) * spacing), dims.Y(ypos + 2));
 		var label = new Two.Text(i, dims.X((i - center) * spacing), dims.Y(ypos - 5));
 
-		xAxis.add(tick);
-		xAxis.add(label);
+		axis.add(tick);
+		axis.add(label);
 
 		if (i == 0) {						// If there is a zero-tick we store the tick and label so we can remove it later if required
-			xAxis.declareZero(tick, label);
+			axis.declareZero(tick, label);
 		}
 	}
 
-	xAxis.spacing = spacing;		// Append the spacing to the object
-	two.add(xAxis);			// Objects created using the Two.<constructor> have to be added explicitly
+	axis.spacing = spacing;		// Append the spacing to the object
+	two.add(axis);			// Objects created using the Two.<constructor> have to be added explicitly
 
-	return xAxis;
+	return axis;
+}
+
+
+function makeXAxis(start, finish, step = 1, ypos = 0, width = 80, extension = 3) {
+	
+	return makeAxis(flip=false, start, finish, step, ypos, width, extension);
 }
 
 
