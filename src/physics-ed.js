@@ -92,7 +92,7 @@ class Axis extends Two.Group {
  *	@arg {float} extension - Distance (in x-percent) to extend axis beyond end-most ticks (and specified width)
  *	@returns {Two.Group} - Return the Two.Group corresponding to the x-axis.
  */
-function makeXAxis(start = -8, finish = 8, step = 1, ypos = 0, width = 80, extension = 3) {
+function makeXAxis(start, finish, step = 1, ypos = 0, width = 80, extension = 3) {
 	
 	var spacing = width / (finish - start);
 	var center = (start + finish) / 2;		// Calculate the tick label of the center of the axis based on specified start and finish.
