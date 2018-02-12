@@ -143,16 +143,16 @@ function initScene(width, height, elem) {
 
 /**
  * Create an arrow-head centered at (0,0) and pointing to the right
+ * @arg {float} width - Both width and height of diagonal lines or arrow head measured in scale-units.
  */
-function makeArrowHead(pixelWidth = 13) {
+function makeArrowHead(width = 0.15) {
 	
+	var au = Two.axisUnits;					// Access the axis units
 	var arrowHead = new Two.Group();
 
 	// Add arrow to the right of the axis line
-	arrowHead.add(new Two.Line(0,0,-pixelWidth, pixelWidth));
-	arrowHead.add(new Two.Line(0,0,-pixelWidth,-pixelWidth));
-
-	arrowHead.pixelWidth = pixelWidth;
+	arrowHead.add(new Two.Line(0,0,-au.px(width), au.px(width)));
+	arrowHead.add(new Two.Line(0,0,-au.px(width),-au.px(width)));
 
 	return arrowHead;
 }
@@ -193,7 +193,7 @@ class Axis extends Two.Group {
 	 */
 	xshift(delta) {
 
-		this.translation.set(this.units.px(delta), 0);
+		this.translation.set(Two.axisUnits.px(delta), 0);
 	}
 
 
@@ -203,7 +203,7 @@ class Axis extends Two.Group {
 	 */
 	yshift(delta) {
 		
-		this.translation.set(0, this.units.px(delta));
+		this.translation.set(0, Two.axisUnits.px(delta));
 	}
 }
 
@@ -218,40 +218,42 @@ class Axis extends Two.Group {
  *	@arg {int} finish - Largest tick label of axis.
  *	@arg {int} step - Interval between successive ticks.
  *	@arg {float} width - Required total width of the axis in percent-units (see Dimensions). Ignored if spacing is unequal to zero.
- *	@arg {float} spacing - Number of pixels per unit on the scale (length between successive integral ticks)
- *	@arg {float} extension - Distance (in scale/axis-units) to extend axis beyond end-most ticks (and specified width)
+ *	@arg {float} spacing - Length between successive integral ticks measured in percent-units.
+ *	@arg {float} extension - Distance (in axis-units) to extend axis beyond end-most ticks (and specified width)
  *	@returns {Two.Group} - Axis (subclass of Two.Group) corresponding to the axis.
  */
-function makeXAxis(start, finish, step = 1, width = 100, spacing = 0, extension = 0.3) {
+function makeXAxis(start, finish, step = 1, width = 100, spacing = 0, extension = 0.5) {
 
 	var dims = Two.dims;		// Get the Dimensions object stored 
 
 	if (spacing == 0)
 		spacing = width / (finish - start);
 
+	// Create axis units corresponding to this spacing
+	var au = new AxisUnits(dims.px(spacing));		// Create and store AxisUnits that will allow us to convert between axis units and actual pixels
+	Two.axisUnits = au;
+
 	var center = (start + finish) / 2;		// Calculate the tick label of the center of the axis based on specified start and finish.
 											// To make sure that the entire axis is centered on the scene we have to shift all positions by this amount
 
 	// Calculate the start and finish positions in absolute pixel values after incorporating the center of the axis, the spacing between ticks, and the extension
 	// 'start - center' shifts 'start' such that the created axis is centered on the center of the scene.
-	var absStart = (start - center - extension) * spacing;
-	var absFinish = (finish - center + extension) * spacing;
+	var absStart = dims.px( (start - center) * spacing ) - au.px(extension);
+	var absFinish = dims.px( (finish - center) * spacing ) + au.px(extension);
 
 	var axis = new Axis();			// create empty Axis (essentially a Two.Group)
 
-	axis.add(new Two.Line(dims.px(absStart), 0, dims.px(absFinish), 0));		// Create main horizontal line
+	axis.add(new Two.Line(absStart, 0, absFinish, 0));		// Create main horizontal line
 	
 	// Add arrow head
 	var arrowHead = makeArrowHead();
-	arrowHead.translation.set(dims.px(absFinish), 0);
+	arrowHead.translation.set(absFinish, 0);
 	axis.add(arrowHead);
-	axis.arrowHead = {};									// Create empty object for axis.arrowHead so that we can insert .pixelWidth in to it on the next line
-	axis.arrowHead.pixelWidth = arrowHead.pixelWidth;		// Store the arrowHead pixelWidth for reuse in second axis for matching
 
 	for (var i = start; i <= finish; i += step) {
 
-		var tick = new Two.Line(dims.px((i - center) * spacing), dims.px(-2), dims.px((i - center) * spacing), dims.px(2));
-		var label = new Two.Text(i, dims.px((i - center) * spacing), dims.px(-5));
+		var tick = new Two.Line(dims.px((i - center) * spacing), au.py(-0.15), dims.px((i - center) * spacing), au.py(0.15));
+		var label = new Two.Text(i, dims.px((i - center) * spacing), au.py(-0.5));
 
 		axis.add(tick);
 		axis.add(label);
@@ -263,7 +265,6 @@ function makeXAxis(start, finish, step = 1, width = 100, spacing = 0, extension 
 
 
 	axis.spacing = spacing;									// Store the spacing (measuring in percent-units
-	axis.units = new AxisUnits(dims.px(spacing));			// Create and store AxisUnits that will allow us to convert between axis units and actual pixels
 	axis.linewidth = 1.5;
 
 	return axis;
@@ -275,7 +276,7 @@ function makeXAxis(start, finish, step = 1, width = 100, spacing = 0, extension 
  *
  * Calls makeXAxis and then rotates the created axis to the y-direction.
  */
-function makeYAxis(start, finish, step = 1, width = 100, spacing = 0, extension = 0.3) {
+function makeYAxis(start, finish, step = 1, width = 100, spacing = 0, extension = 0.5) {
 
 	var yAxis = makeXAxis(start, finish, step, width, spacing, extension);
 
