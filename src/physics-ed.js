@@ -250,6 +250,8 @@ function makeXAxis(start, finish, step = 1, width = 100, spacing = 0, extension 
 	arrowHead.translation.set(absFinish, 0);
 	axis.add(arrowHead);
 
+	axis.tickLabels = [];
+
 	for (var i = start; i <= finish; i += step) {
 
 		var tick = new Two.Line(dims.px((i - center) * spacing), au.py(-0.15), dims.px((i - center) * spacing), au.py(0.15));
@@ -257,6 +259,7 @@ function makeXAxis(start, finish, step = 1, width = 100, spacing = 0, extension 
 
 		axis.add(tick);
 		axis.add(label);
+		axis.tickLabels.push(label);		// Create a list of the tick labels to remove later if need be.
 
 		if (i == 0) {						// If there is a zero-tick we store the tick and label so we can remove it later if required
 			axis.declareZero(tick, label);
@@ -278,9 +281,15 @@ function makeXAxis(start, finish, step = 1, width = 100, spacing = 0, extension 
  */
 function makeYAxis(start, finish, step = 1, width = 100, spacing = 0, extension = 0.5) {
 
-	var yAxis = makeXAxis(start, finish, step, width, spacing, extension);
+	var axis = makeXAxis(start, finish, step, width, spacing, extension);
+	axis.rotation = - Math.PI / 2;
 
-	yAxis.rotation = - Math.PI / 2;
+	// The tick labels are on the RHS of the y-axis and rotated incorrectly
+	for (label of axis.tickLabels) {			// Iterate over all labels stored in axis.tickLabels (an array)
 
-	return yAxis;
+		label.rotation = Math.PI / 2;			// counter-rotate the labels
+		label.translation._y -= Two.axisUnits.px(1);		// Shift the labels to the other side of the axis. Note that we are changing the y-value even though the shift is in the x-direction of the outside observer. This is because the yAxis has been rotated by 90 degrees. The rotation is carried out as the last stage of the rendering so our changes have to keep that in mind.
+	}
+
+	return axis;
 }
