@@ -166,6 +166,26 @@ class Axis extends Two.Group {
 
 		return this;		// Return a handle to the object itselt so that one can chain with this method.
 	}
+
+	
+	/**
+	 * Shift the axis in the x-direction by amount 'delta'.
+	 * @arg {float} delta - Amount to shift axis in x-direction measured in scale-units.
+	 */
+	xshift(delta) {
+
+		this.translation.set(this.units.px(delta), 0);
+	}
+
+
+	/**
+	 * Shift the axis in the y-direction by amount 'delta'.
+	 * @arg {float} delta - Amount to shift axis in y-direction measured in scale-units.
+	 */
+	yshift(delta) {
+		
+		this.translation.set(0, this.units.px(delta));
+	}
 }
 
 
@@ -223,7 +243,8 @@ function makeXAxis(start, finish, step = 1, width = 100, spacing = 0, extension 
 	}
 
 
-	axis.spacing = spacing;		// Append the spacing to the object
+	axis.spacing = spacing;									// Store the spacing (measuring in percent-units
+	axis.units = new AxisUnits(dims.px(spacing));			// Create and store AxisUnits that will allow us to convert between axis units and actual pixels
 	axis.linewidth = 1.5;
 
 	return axis;
