@@ -2,11 +2,6 @@
  * This script requires: 	two.js, physics-ed.js
  */
 
-/** Global Variables */
-var two;		// Two scene
-var dims;		// Global Dimensions object that converts between percentage and actual pixel position values
-
-
 
 /**
  * Initialize the entire animation.
@@ -24,7 +19,6 @@ function setupScene() {
 
 	var elem = document.getElementById('Scene');
 	two = initScene(window.innerWidth, window.innerHeight, elem);
-	dims = new Dimensions(two.width, two.height);
 
 	// Add x-axis	
 	var xAxis = makeXAxis(-8, 8, 2).suppressZero();

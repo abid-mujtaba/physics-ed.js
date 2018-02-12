@@ -31,42 +31,36 @@ class RArray extends Array {
 }
 
 
-// TODO Ensure that Dimensinos are defined such that the aspect ratio is preserved and that the smallest dimension (width or height) is defined to be equal to 20 units. Everything must then be in terms of this unit.
 /**
- * Normalizes window dimensions to 100 x 100.
- * @constructor stores the passed in width and height of the rendering scene
+ * Normalizes window dimensions to 100 x 100. Aspect ratio is 1:1 with 100 units corresponding to the shorter of the two dimensions (x or y).
+ * @constructor stores the passed in width and height of the rendering scene.
  */
 class Dimensions {
 	constructor(width, height) {
-		this.width = width;
-		this.height = height;
+
+		this.length = Math.min(width, height);			// 
 	}
 
 	/**
-	 * Convert x-position in percentage of screen width to actual pixel value.
-	 *
-	 * @arg {float} xPercent - x-position in terms of percentage of the scene width. Can be negative. 
-	 * @returns {float} - x-position in actual pixels calculated using the internally stored width of the scene. 
+	 * Convert normalized percent units (100 per length) in to actual pixels on the screen.
+	 * 
+	 * @arg {float} percent - Length in units of percentage.
+	 * @returns {float} - Percentage length converted to actual pixels on the screen.
 	 */
-	X(xPercent) {
+	px(percent) {
 
-		return xPercent * this.width / 100;
+		return percent * this.length / 100; 
 	}
 
-	/** y-position function analogous to X() */
-	Y(yPercent) {
+	/**
+	 * Convert length in pixels in to normalized percent units.
+	 *
+	 * @arg {float} pixels - Length in actual pixels.
+	 * @returns {float} - Length in normalized percentage units.
+	 */
+	per(pixels) {
 
-		return - yPercent * this.height / 100;		// The minus sign means positive y corresponds to vertically upward (the opposite of images)
-	}
-
-
-	/** Convert pixel value to percentage value. The inverse of .X(). */
-	invX(x) {
-		return x * 100 / this.width;
-	}
-
-	invY(y) {
-		return y * 100 / this.height;
+		return pixels / this.length * 100;
 	}
 }
 
@@ -84,6 +78,10 @@ function initScene(width, height, elem) {
 
 	var param = { width: window.innerWidth, height: window.innerHeight, type: Two.Types.svg};
 	var two = new Two(param).appendTo(elem);
+
+	// Create normalized percent units for the scene.
+	dims = new Dimensions(two.width, two.height);
+	Two.dims = dims;			// Store the dims 'Two' class (NOT in an instant, in the class itself which is globally accessible).
 
 	// Translate scene so that its (0,0) matches with center of screen
 	two.scene.translation.set(two.width / 2, two.height / 2);
@@ -166,19 +164,19 @@ function makeAxis(flip = false, start, finish, step = 1, ppos = 0, width = 80, e
 
 	var axis = new Axis();			// create empty Axis (essentially a Two.Group)
 
-	axis.add(new Two.Line(dims.X(absStart), dims.Y(ppos), dims.X(absFinish), dims.Y(ppos)));		// Create main horizontal line
+	axis.add(new Two.Line(dims.px(absStart), dims.px(ppos), dims.px(absFinish), dims.px(ppos)));		// Create main horizontal line
 	
 	// Add arrow head
 	var arrowHead = makeArrowHead();
-	arrowHead.translation.set(dims.X(absFinish), dims.Y(ppos));
+	arrowHead.translation.set(dims.px(absFinish), dims.px(ppos));
 	axis.add(arrowHead);
 	axis.arrowHead = {};									// Create empty object for axis.arrowHead so that we can insert .pixelWidth in to it on the next line
 	axis.arrowHead.pixelWidth = arrowHead.pixelWidth;		// Store the arrowHead pixelWidth for reuse in second axis for matching
 
 	for (var i = start; i <= finish; i += step) {
 
-		var tick = new Two.Line(dims.X((i - center) * spacing), dims.Y(ppos - 2), dims.X((i - center) * spacing), dims.Y(ppos + 2));
-		var label = new Two.Text(i, dims.X((i - center) * spacing), dims.Y(ppos - 5));
+		var tick = new Two.Line(dims.px((i - center) * spacing), dims.px(ppos - 2), dims.px((i - center) * spacing), dims.px(ppos + 2));
+		var label = new Two.Text(i, dims.px((i - center) * spacing), dims.px(ppos - 5));
 
 		axis.add(tick);
 		axis.add(label);
@@ -214,11 +212,11 @@ function makeYAxis(start = -8, finish = 8, step = 1, xpos = 0, width = 80, exten
 
 	var yAxis = new Axis();
 
-	yAxis.add(new Two.Line(dims.X(xpos), dims.Y(spacing * (start - center) - extension), dims.X(xpos), dims.Y(spacing * (finish - center) + extension)));
+	yAxis.add(new Two.Line(dims.px(xpos), dims.px(spacing * (start - center) - extension), dims.px(xpos), dims.px(spacing * (finish - center) + extension)));
 
 	for (var i = start; i <= finish; i += step) {
-		var tick = new Two.Line(dims.X(xpos - 2), dims.Y((i - center) * spacing), dims.X(xpos + 2), dims.Y((i - center) * spacing));
-		var label = new Two.Text(i, dims.X(xpos - 5), dims.Y((i - center) * spacing));
+		var tick = new Two.Line(dims.px(xpos - 2), dims.px((i - center) * spacing), dims.px(xpos + 2), dims.px((i - center) * spacing));
+		var label = new Two.Text(i, dims.px(xpos - 5), dims.px((i - center) * spacing));
 
 		yAxis.add(tick);
 		yAxis.add(label);
