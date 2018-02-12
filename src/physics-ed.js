@@ -138,7 +138,7 @@ class Axis extends Two.Group {
 
 
 /**
- *	Make an Axis Two.Group.
+ *	Make the x-axis (Two.Group).
  *
  *	The center of the drawn line is at the center of the screen (0,0) regardless of where the 0 value of the axis might be. Use 'translate' to move the created group around.
  *  Assumes that initScene() and new Dimensions() has been called.
@@ -146,21 +146,27 @@ class Axis extends Two.Group {
  *	@arg {int} start - Smallest tick label of axis.
  *	@arg {int} finish - Largest tick label of axis.
  *	@arg {int} step - Interval between successive ticks.
- *	@arg {float} ppos - Position of axis along perpendicular direction e.g. y-position of the x-axis in y-percent
- *	@arg {float} width - Required total width of the axis in percent-units (see Dimensions)
- *	@arg {float} extension - Distance (in percent-units) to extend axis beyond end-most ticks (and specified width)
- *	@returns {Two.Group} - Return the Two.Group corresponding to the axis.
+ *	@arg {float} ppos - Position of x-axis along the y direction in scale/axis units 
+ *	@arg {float} width - Required total width of the axis in percent-units (see Dimensions). Ignored if spacing is unequal to zero.
+ *	@arg {float} spacing - Number of pixels per unit on the scale (length between successive integral ticks)
+ *	@arg {float} extension - Distance (in scale/axis-units) to extend axis beyond end-most ticks (and specified width)
+ *	@returns {Two.Group} - Axis (subclass of Two.Group) corresponding to the axis.
  */
-function makeAxis(flip = false, start, finish, step = 1, ppos = 0, width = 80, extension = 3) {
+function makeXAxis(start, finish, step = 1, ppos = 0, width = 300, spacing = 0, extension = 0.3) {
 
-	var spacing = width / (finish - start);
+	var dims = Two.dims;		// Get the Dimensions object stored 
+
+	if (spacing == 0)
+		spacing = width / (finish - start);
+
 	var center = (start + finish) / 2;		// Calculate the tick label of the center of the axis based on specified start and finish.
 											// To make sure that the entire axis is centered on the scene we have to shift all positions by this amount
 
 	// Calculate the start and finish positions in absolute pixel values after incorporating the center of the axis, the spacing between ticks, and the extension
 	// 'start - center' shifts 'start' such that the created axis is centered on the center of the scene.
-	var absStart = (start - center) * spacing - extension;
-	var absFinish = (finish - center) * spacing + extension;
+	var absStart = (start - center - extension) * spacing;
+	var absFinish = (finish - center + extension) * spacing;
+	ppos *= spacing;			// Mulitply by ppos to convert from scale-units to percent-units
 
 	var axis = new Axis();			// create empty Axis (essentially a Two.Group)
 
@@ -191,12 +197,6 @@ function makeAxis(flip = false, start, finish, step = 1, ppos = 0, width = 80, e
 	axis.linewidth = 1.5;
 
 	return axis;
-}
-
-
-function makeXAxis(start, finish, step = 1, ypos = 0, width = 80, extension = 3) {
-	
-	return makeAxis(flip=false, start, finish, step, ypos, width, extension);
 }
 
 
