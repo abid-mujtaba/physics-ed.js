@@ -146,13 +146,12 @@ class Axis extends Two.Group {
  *	@arg {int} start - Smallest tick label of axis.
  *	@arg {int} finish - Largest tick label of axis.
  *	@arg {int} step - Interval between successive ticks.
- *	@arg {float} ppos - Position of x-axis along the y direction in scale/axis units 
  *	@arg {float} width - Required total width of the axis in percent-units (see Dimensions). Ignored if spacing is unequal to zero.
  *	@arg {float} spacing - Number of pixels per unit on the scale (length between successive integral ticks)
  *	@arg {float} extension - Distance (in scale/axis-units) to extend axis beyond end-most ticks (and specified width)
  *	@returns {Two.Group} - Axis (subclass of Two.Group) corresponding to the axis.
  */
-function makeXAxis(start, finish, step = 1, ppos = 0, width = 300, spacing = 0, extension = 0.3) {
+function makeXAxis(start, finish, step = 1, width = 100, spacing = 0, extension = 0.3) {
 
 	var dims = Two.dims;		// Get the Dimensions object stored 
 
@@ -166,23 +165,22 @@ function makeXAxis(start, finish, step = 1, ppos = 0, width = 300, spacing = 0, 
 	// 'start - center' shifts 'start' such that the created axis is centered on the center of the scene.
 	var absStart = (start - center - extension) * spacing;
 	var absFinish = (finish - center + extension) * spacing;
-	ppos *= spacing;			// Mulitply by ppos to convert from scale-units to percent-units
 
 	var axis = new Axis();			// create empty Axis (essentially a Two.Group)
 
-	axis.add(new Two.Line(dims.px(absStart), dims.px(ppos), dims.px(absFinish), dims.px(ppos)));		// Create main horizontal line
+	axis.add(new Two.Line(dims.px(absStart), 0, dims.px(absFinish), 0));		// Create main horizontal line
 	
 	// Add arrow head
 	var arrowHead = makeArrowHead();
-	arrowHead.translation.set(dims.px(absFinish), dims.px(ppos));
+	arrowHead.translation.set(dims.px(absFinish), 0);
 	axis.add(arrowHead);
 	axis.arrowHead = {};									// Create empty object for axis.arrowHead so that we can insert .pixelWidth in to it on the next line
 	axis.arrowHead.pixelWidth = arrowHead.pixelWidth;		// Store the arrowHead pixelWidth for reuse in second axis for matching
 
 	for (var i = start; i <= finish; i += step) {
 
-		var tick = new Two.Line(dims.px((i - center) * spacing), dims.px(ppos - 2), dims.px((i - center) * spacing), dims.px(ppos + 2));
-		var label = new Two.Text(i, dims.px((i - center) * spacing), dims.px(ppos - 5));
+		var tick = new Two.Line(dims.px((i - center) * spacing), dims.px(-2), dims.px((i - center) * spacing), dims.px(2));
+		var label = new Two.Text(i, dims.px((i - center) * spacing), dims.px(-5));
 
 		axis.add(tick);
 		axis.add(label);
@@ -203,30 +201,13 @@ function makeXAxis(start, finish, step = 1, ppos = 0, width = 300, spacing = 0, 
 /**
  * Make a y-axis Two.Group.
  *
- * Completely analogous to makeXAxis.
+ * Calls makeXAxis and then rotates the created axis to the y-direction.
  */
-function makeYAxis(start = -8, finish = 8, step = 1, xpos = 0, width = 80, extension = 3) {
-	
-	var spacing = width / (finish - start);
-	var center = (start + finish) / 2;
+function makeYAxis(start, finish, step = 1, width = 100, spacing = 0, extension = 0.3) {
 
-	var yAxis = new Axis();
+	var yAxis = makeXAxis(start, finish, step, width, spacing, extension);
 
-	yAxis.add(new Two.Line(dims.px(xpos), dims.px(spacing * (start - center) - extension), dims.px(xpos), dims.px(spacing * (finish - center) + extension)));
-
-	for (var i = start; i <= finish; i += step) {
-		var tick = new Two.Line(dims.px(xpos - 2), dims.px((i - center) * spacing), dims.px(xpos + 2), dims.px((i - center) * spacing));
-		var label = new Two.Text(i, dims.px(xpos - 5), dims.px((i - center) * spacing));
-
-		yAxis.add(tick);
-		yAxis.add(label);
-
-		if (i == 0) {
-			yAxis.declareZero(tick, label);
-		}
-	}
-
-	yAxis.spacing = spacing;
+	yAxis.rotation = - Math.PI / 2;
 
 	return yAxis;
 }
