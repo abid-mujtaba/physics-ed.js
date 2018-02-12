@@ -31,6 +31,7 @@ class RArray extends Array {
 }
 
 
+// TODO Ensure that Dimensinos are defined such that the aspect ratio is preserved and that the smallest dimension (width or height) is defined to be equal to 20 units. Everything must then be in terms of this unit.
 /**
  * Normalizes window dimensions to 100 x 100.
  * @constructor stores the passed in width and height of the rendering scene
@@ -171,6 +172,7 @@ function makeAxis(flip = false, start, finish, step = 1, ppos = 0, width = 80, e
 	var arrowHead = makeArrowHead();
 	arrowHead.translation.set(dims.X(absFinish), dims.Y(ppos));
 	axis.add(arrowHead);
+	axis.arrowHead = {};									// Create empty object for axis.arrowHead so that we can insert .pixelWidth in to it on the next line
 	axis.arrowHead.pixelWidth = arrowHead.pixelWidth;		// Store the arrowHead pixelWidth for reuse in second axis for matching
 
 	for (var i = start; i <= finish; i += step) {
@@ -188,8 +190,6 @@ function makeAxis(flip = false, start, finish, step = 1, ppos = 0, width = 80, e
 
 
 	axis.spacing = spacing;		// Append the spacing to the object
-	two.add(axis);			// Objects created using the Two.<constructor> have to be added explicitly
-
 	axis.linewidth = 1.5;
 
 	return axis;
@@ -229,7 +229,6 @@ function makeYAxis(start = -8, finish = 8, step = 1, xpos = 0, width = 80, exten
 	}
 
 	yAxis.spacing = spacing;
-	two.add(yAxis);	
 
 	return yAxis;
 }

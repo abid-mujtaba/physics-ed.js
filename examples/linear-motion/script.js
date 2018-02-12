@@ -28,7 +28,10 @@ function setupScene() {
 
 	// Add x-axis	
 	var xAxis = makeXAxis(-8, 8, 2).suppressZero();
-	makeYAxis(-4,4).suppressZero();
+	var yAxis = makeYAxis(-4,4).suppressZero();
+
+	two.add(xAxis);
+	two.add(yAxis);
 
 	// Render scene
 	two.update();
