@@ -33,7 +33,7 @@ class RArray extends Array {
 
 /**
  * Normalizes window dimensions to 100 x 100. Aspect ratio is 1:1 with 100 units corresponding to the shorter of the two dimensions (x or y).
- * @constructor stores the passed in width and height of the rendering scene.
+ * @constructor stores the minimum of the passed in width and height of the rendering scene as the length that corresponds to 100 percent-units.
  */
 class Dimensions {
 	constructor(width, height) {
@@ -61,6 +61,38 @@ class Dimensions {
 	per(pixels) {
 
 		return pixels / this.length * 100;
+	}
+}
+
+
+/** Convert between axis-units (units that correspond to the drawn axis) and actual pixels. Analogous to Dimensions. */
+class AxisUnits {
+	constructor(pixelsPerAxisUnit) {
+
+		this.pixelsPerAxisUnit =  pixelsPerAxisUnit;
+		console.log("pixelsPerAxisUnit = " + pixelsPerAxisUnit);
+	}
+
+	/**
+	 * Convert axis units in to actual pixels on the screen.
+	 * 
+	 * @arg {float} axisUnits - Length in axis units.
+	 * @returns {float} - Length in axis units converted to actual pixels on the screen.
+	 */
+	px(axisUnits) {
+
+		return axisUnits * this.pixelsPerAxisUnit;
+	}
+
+	/**
+	 * Convert length in pixels in to axis units.
+	 *
+	 * @arg {float} pixels - Length in actual pixels.
+	 * @returns {float} - Length converted to axis units.
+	 */
+	au(pixels) {
+
+		return pixels / this.pixelsPerAxisUnit;
 	}
 }
 
