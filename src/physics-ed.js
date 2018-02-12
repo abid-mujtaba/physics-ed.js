@@ -52,6 +52,16 @@ class Dimensions {
 		return percent * this.length / 100; 
 	}
 
+
+	/**
+	 * Convert percent units to actual pixels on screen for distance along the y-direction with the UPWARD direction considered positive.
+	 * In images the origin is at the top-left corner and downward is considered positive.
+	 */
+	py(percent) {
+
+		return - this.px(percent);
+	}
+
 	/**
 	 * Convert length in pixels in to normalized percent units.
 	 *
@@ -70,7 +80,6 @@ class AxisUnits {
 	constructor(pixelsPerAxisUnit) {
 
 		this.pixelsPerAxisUnit =  pixelsPerAxisUnit;
-		console.log("pixelsPerAxisUnit = " + pixelsPerAxisUnit);
 	}
 
 	/**
@@ -82,6 +91,16 @@ class AxisUnits {
 	px(axisUnits) {
 
 		return axisUnits * this.pixelsPerAxisUnit;
+	}
+
+
+	/**
+	 * Convert axis units to actual pixels on screen for distance along the y-direction with the UPWARD direction considered positive.
+	 * In images the origin is at the top-left corner and downward is considered positive.
+	 */
+	py(axisUnits) {
+
+		return - this.px(axisUnits);
 	}
 
 	/**
