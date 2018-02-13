@@ -18,11 +18,12 @@ function init() {
 function setupScene() {
 
 	var elem = document.getElementById('Scene');
-	two = initScene(window.innerWidth, window.innerHeight, elem);
+	var two = initScene(window.innerWidth, window.innerHeight, elem);
 
 	// Add x-axis	
-	var xAxis = makeXAxis(-8, 8, 2).suppressZero();
-	var yAxis = makeYAxis(-4,4).suppressZero();
+	var xAxis = makeXAxis(-15,8,1,300).suppressZero();
+	var yAxis = makeYAxis(-3,3,1,0,xAxis.spacing).suppressZero();
+	yAxis.xshift(3.5);
 
 	two.add(xAxis);
 	two.add(yAxis);
