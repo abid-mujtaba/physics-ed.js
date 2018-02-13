@@ -75,6 +75,9 @@ class Dimensions {
 }
 
 
+// TODO Ensure that every unit mentioned OUTSIDE of this script using axis units exclusively.
+// TODO Provde a flag in the constructor that allows one to use the maximum dimension instead of the minimum dimension for scaling axis units to 100.
+// TODO Use Phy as a wrapper on top of Two and wrap all methods of Two so that the wrapped Phy versions use axis units exclusively allowing for a cleaner and more consolided approach.
 /** Convert between axis-units (units that correspond to the drawn axis) and actual pixels. Analogous to Dimensions. */
 class AxisUnits {
 	constructor(pixelsPerAxisUnit) {
@@ -158,6 +161,7 @@ function makeArrowHead(width = 0.15) {
 }
 
 
+// TODO Place Axis inside the Phy container.
 /**
  * xAxis and yAxis are instances of this subclass of Two.Group
  */
@@ -187,13 +191,15 @@ class Axis extends Two.Group {
 	}
 
 	
+	// TODO extend core class of Two to incorporate xshift and yshift in all objects (which will incorporate it in to Two.Group automatically)
+	// TODO Add a shift(,) method that recursively calls xshift and yshift
 	/**
 	 * Shift the axis in the x-direction by amount 'delta'.
 	 * @arg {float} delta - Amount to shift axis in x-direction measured in scale-units.
 	 */
 	xshift(delta) {
 
-		this.translation.set(Two.axisUnits.px(delta), 0);
+		this.translation._x += Two.axisUnits.px(delta);
 	}
 
 
@@ -203,7 +209,7 @@ class Axis extends Two.Group {
 	 */
 	yshift(delta) {
 		
-		this.translation.set(0, Two.axisUnits.px(delta));
+		this.translation._y += Two.axisUnits.px(delta);
 	}
 }
 

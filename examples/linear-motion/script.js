@@ -20,6 +20,7 @@ function setupScene() {
 	var elem = document.getElementById('Scene');
 	var two = initScene(window.innerWidth, window.innerHeight, elem);
 
+	// TODO Store scene-width and height in axis-units in the global object to use instead of arbitrary widths (300)
 	// Add x-axis	
 	var xAxis = makeXAxis(-15,8,1,300).suppressZero();
 	var yAxis = makeYAxis(-3,3,1,0,xAxis.spacing).suppressZero();
