@@ -24,17 +24,14 @@ function init() {
  */
 function initScene(width, height, elem) {
 
-	var param = { sceneWidth: window.innerWidth, sceneHeight: window.innerHeight, width = 25, type: Two.Types.svg};
-	var two = new Phy(param).appendTo(elem);
+	var param = {sceneWidth: window.innerWidth, sceneHeight: window.innerHeight, width: 25, type: Two.Types.svg};
+	var phy = new Phy(param).appendTo(elem);
 
 	// Create normalized percent units for the scene.
-	dims = new Dimensions(two.width, two.height);
+	dims = new Dimensions(phy.width, phy.height);
 	Two.dims = dims;			// Store the dims 'Two' class (NOT in an instant, in the class itself which is globally accessible).
 
-	// Translate scene so that its (0,0) matches with center of screen
-	two.scene.translation.set(two.width / 2, two.height / 2);
-
-	return two;
+	return phy;
 }
 
 

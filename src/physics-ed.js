@@ -208,13 +208,22 @@ class Phy extends Two {
 	    else
 	    	width = 20;					// If neither is defined use the default value of 20.
 
+		
+		// Declare defaults for scene width and height
+	    param['sceneWidth'] = param['sceneWidth'] || 640;
+	    param['sceneHeight'] = param['sceneHeight'] || 480;
 
 		param['width'] = param['sceneWidth'];
 		param['height'] = param['sceneHeight'];
 
 		super(param);			// Call the constructor of the superclass Two
 
+
 		// Construct the new units based on passed in values
+	    this.units = new Units(width, height, param['sceneWidth'], param['sceneHeight']);
+
+		// Translate scene so that its (0,0) matches with center of screen
+		this.scene.translation.set( param['sceneWidth'] / 2, param['sceneHeight'] / 2);
 	}
 }
 
