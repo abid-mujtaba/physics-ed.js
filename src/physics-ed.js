@@ -216,7 +216,12 @@ class Phy extends Two {
 		param['width'] = param['sceneWidth'];
 		param['height'] = param['sceneHeight'];
 
-		super(param);			// Call the constructor of the superclass Two
+
+		// Declare default for renderer type
+		param['type'] = param['type'] || Two.Types.svg;
+
+		// Call the constructor of the superclass Two
+		super(param);
 
 
 		// Construct the new units based on passed in values

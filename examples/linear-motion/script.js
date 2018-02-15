@@ -13,7 +13,7 @@ function init() {
 	
 
 /**
- * Creates the root scene (Two() object).
+ * Creates the root scene (Phy object).
  * 
  * Translates the scene so that its center (0,0) matches with the center of the specified element.
  * 
@@ -24,7 +24,7 @@ function init() {
  */
 function initScene(width, height, elem) {
 
-	var param = {sceneWidth: window.innerWidth, sceneHeight: window.innerHeight, width: 25, type: Two.Types.svg};
+	var param = {sceneWidth: window.innerWidth, sceneHeight: window.innerHeight, width: 25};
 	var phy = new Phy(param).appendTo(elem);
 
 	// Create normalized percent units for the scene.
@@ -41,7 +41,7 @@ function initScene(width, height, elem) {
 function setupScene() {
 
 	var elem = document.getElementById('Scene');
-	var two = initScene(window.innerWidth, window.innerHeight, elem);
+	var phy = initScene(window.innerWidth, window.innerHeight, elem);
 
 	// TODO Store scene-width and height in axis-units in the global object to use instead of arbitrary widths (300)
 	// Add x-axis	
@@ -49,11 +49,11 @@ function setupScene() {
 	var yAxis = makeYAxis(-3,3,1,0,xAxis.spacing).suppressZero();
 	yAxis.xshift(3.5);
 
-	two.add(xAxis);
-	two.add(yAxis);
+	phy.add(xAxis);
+	phy.add(yAxis);
 
 	// Render scene
-	two.update();
+	phy.update();
 }
 
 
