@@ -120,11 +120,65 @@ class AxisUnits {
 
 
 /**
+ * Units is a class that stores the scene dimensions, the user-specified dimensions of the scene and provides mechanisms to convert between them.
+ */
+class Units {
+
+	/**
+	 * @arg {float} width - Width of the scene in units chosen by the user. All objects will be drawn based on this choice.
+	 * @arg {float} height - ONLY used if width is undefined. If width is specified height is calculated automatically to preserve aspect ratio 1:1 between horizontal and vertical units. Height of the scene in units chosen by the user.
+	 * @arg {int} pixelWidth - Width of the scene in PIXELS.
+	 * @arg {int} pixelHeight - Height of the scene in PIXELS
+	 */
+	constructor(width, height, pixelWidth, pixelHeight) {
+		
+		this.pixelWidth = pixelWidth;
+		this.pixelHeight = pixelHeight;
+
+		if (width) {
+			this.width = width;
+			this.pixelsPerUnit = sceneWidth / width;
+			this.height = pixelHeight / this.pixelsPerUnit;
+		}
+		else {
+			this.height = height;
+			this.pixelsPerUnit = sceneHeight / height;
+			this.width = pixelWidth / this.pixelsPerUnit;
+		}
+	}
+}
+
+
+/**
  * The Phy class which extends the Two class focusing on an internal set of units for every object and adding new objects that are used frequently in Physics.
+ *
+ * @constructor Accepts a dictionary object:
+ *
+ * 		Accepts all of the same arguments as Two with the exception of:
+ *
+ *		@arg {int} sceneWidth - Is called 'width' in Two. The width of the scene in PIXELS. Default: 640.
+ *		@arg {int} sceneHeight - Is called 'height' in Two. The height of the scene in PIXELS. Default: 480.
+ *		@arg {float} width - The width of the scene in units defined by the user. These are the units that will be used to create ALL objects. PIXELS will NOT be used. If both the width AND the height are NOT specified the default width will be set to 20. (-10 to +10).
+ *		@arg {float} height - Only used if width is NOT specified. The height of the scene in units defined by the user. (See width.)
  */
 class Phy extends Two {
 	
 	constructor(param) {
+
+		// Store (or default to) the width and height in user-defined units.
+	    var width, height;	
+
+	    if (param['width'])				// Width takes precedence
+	    	width = param['width'];
+	    else if (param['height'])		// Height is a fall-back if defined.
+	    	height = param['height'];
+	    else
+	    	width = 20;					// If neither is defined use the default value of 20.
+
+
+		param['width'] = param['sceneWidth'];
+		param['height'] = param['sceneHeight'];
+
 		super(param);			// Call the constructor of the superclass Two
 
 		// Construct the new units based on passed in values

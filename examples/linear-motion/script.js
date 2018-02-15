@@ -24,7 +24,7 @@ function init() {
  */
 function initScene(width, height, elem) {
 
-	var param = { width: window.innerWidth, height: window.innerHeight, type: Two.Types.svg};
+	var param = { sceneWidth: window.innerWidth, sceneHeight: window.innerHeight, width = 25, type: Two.Types.svg};
 	var two = new Phy(param).appendTo(elem);
 
 	// Create normalized percent units for the scene.
