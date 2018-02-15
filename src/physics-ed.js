@@ -118,30 +118,19 @@ class AxisUnits {
 	}
 }
 
+
 /**
- * Creates the root scene (Two() object).
- * 
- * Translates the scene so that its center (0,0) matches with the center of the specified element.
- * 
- * @arg {float} width - Width of the scene (in pixels).
- * @arg {float} height - Height of the scene (in pixels).
- * @arg {DOM.Element} elem - The domElement that will contain the scene, usually a <div>. 
- * @returns {Two} - Root scene object.
+ * The Phy class which extends the Two class focusing on an internal set of units for every object and adding new objects that are used frequently in Physics.
  */
-function initScene(width, height, elem) {
+class Phy extends Two {
+	
+	constructor(param) {
+		super(param);			// Call the constructor of the superclass Two
 
-	var param = { width: window.innerWidth, height: window.innerHeight, type: Two.Types.svg};
-	var two = new Two(param).appendTo(elem);
-
-	// Create normalized percent units for the scene.
-	dims = new Dimensions(two.width, two.height);
-	Two.dims = dims;			// Store the dims 'Two' class (NOT in an instant, in the class itself which is globally accessible).
-
-	// Translate scene so that its (0,0) matches with center of screen
-	two.scene.translation.set(two.width / 2, two.height / 2);
-
-	return two;
+		// Construct the new units based on passed in values
+	}
 }
+
 
 
 /**
