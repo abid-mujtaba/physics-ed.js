@@ -137,14 +137,47 @@ class Units {
 
 		if (width) {
 			this.width = width;
-			this.pixelsPerUnit = sceneWidth / width;
+			this.pixelsPerUnit = pixelWidth / width;
 			this.height = pixelHeight / this.pixelsPerUnit;
 		}
 		else {
 			this.height = height;
-			this.pixelsPerUnit = sceneHeight / height;
+			this.pixelsPerUnit = pixelHeight / height;
 			this.width = pixelWidth / this.pixelsPerUnit;
 		}
+	}
+
+
+	/**
+	 * Convert user units in to actual pixels on the screen.
+	 * 
+	 * @arg {float} units - Length in user units.
+	 * @returns {float} - Length in user units converted to actual pixels on the screen.
+	 */
+	px(units) {
+
+		return units * this.pixelsPerUnit;
+	}
+
+
+	/**
+	 * Convert user units to actual pixels on screen for distance along the y-direction with the UPWARD direction considered positive.
+	 * In images the origin is at the top-left corner and downward is considered positive.
+	 */
+	py(units) {
+
+		return - this.px(units);
+	}
+
+	/**
+	 * Convert length in pixels in to user units.
+	 *
+	 * @arg {float} pixels - Length in actual pixels.
+	 * @returns {float} - Length converted to user units.
+	 */
+	u(pixels) {
+
+		return pixels / this.pixelsPerUnit;
 	}
 }
 
