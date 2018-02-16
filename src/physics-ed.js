@@ -373,6 +373,18 @@ class Group extends Two.Group {
 
 		this.translation._x += this.units.px(delta);
 	}
+
+	yshift(delta) {
+		
+		this.translation._y += this.units.py(delta);
+	}
+
+
+	shift(xdelta, ydelta) {
+
+		this.xshift(xdelta);
+		this.yshift(ydelta);
+	}
 }
 
 
