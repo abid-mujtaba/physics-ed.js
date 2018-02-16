@@ -229,6 +229,17 @@ class Phy extends Two {
 
 		// Translate scene so that its (0,0) matches with center of screen
 		this.scene.translation.set( param['sceneWidth'] / 2, param['sceneHeight'] / 2);
+
+
+		// Add modified inner classes
+		Phy.Group = Group;
+	}
+
+
+	emptyGroup() {
+		
+		var U = this.units;
+		return new Phy.Group(U);
 	}
 
 
@@ -317,22 +328,21 @@ class Phy extends Two {
 }
 
 
+class Group extends Two.Group {
 
-/**
- * Create an arrow-head centered at (0,0) and pointing to the right
- * @arg {float} width - Both width and height of diagonal lines or arrow head measured in scale-units.
- */
-function makeArrowHead(width = 0.15) {
+	constructor(units) {
+		super();
+
+		this.units = units;
+	}
 	
-	var au = Two.axisUnits;					// Access the axis units
-	var arrowHead = new Two.Group();
+	xshift(delta) {
 
-	// Add arrow to the right of the axis line
-	arrowHead.add(new Two.Line(0,0,-au.px(width), au.px(width)));
-	arrowHead.add(new Two.Line(0,0,-au.px(width),-au.px(width)));
-
-	return arrowHead;
+		this.translation._x += this.units.px(delta);
+	}
 }
+
+
 
 
 // TODO Place Axis inside the Phy container.
