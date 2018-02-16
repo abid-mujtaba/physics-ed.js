@@ -273,6 +273,14 @@ class Phy extends Two {
 	}
 
 
+	/** Add text at the specified location */
+	makeText(text, x, y, styles) {
+		
+		var U = this.units;
+		return super.makeText(text, U.px(x), U.py(y), styles);
+	}
+
+
 	/**
 	* Create an arrow-head centered at (0,0) and pointing to the right
 	* @arg {float} width - Both width and height of diagonal lines or arrow head measured in scale-units.
