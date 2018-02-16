@@ -261,7 +261,7 @@ class Phy extends Two {
 	makeHLine(x0, y0, width) {
 	
 		width /= 2;
-		return makeLine(x0 - width, y0, x0 + width, y0);	
+		return this.makeLine(x0 - width, y0, x0 + width, y0);	
 	}
 
 
@@ -269,7 +269,7 @@ class Phy extends Two {
 	makeVLine(x0, y0, height) {
 	
 		height /= 2;
-		return makeLine(x0, y0 - height, x0, y0 + height);	
+		return this.makeLine(x0, y0 - height, x0, y0 + height);	
 	}
 
 
