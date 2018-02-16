@@ -347,10 +347,49 @@ class Phy extends Two {
 		return axis;			// 'make' functions are understood to automatically add the created object to the scene.
 	}
 
-			//if (i == 0) {						// If there is a zero-tick we store the tick and label so we can remove it later if required
-				//axis.declareZero(tick, label);
-			//}
-		//}
+
+	/**
+	*	Make the y-axis (Axis <- Phy.Group) and add it to the Phy object.
+	*
+	*	The center of the drawn line is at the center of the screen (0,0) regardless of where the 0 value of the axis might be. Use 'translate' to move the created group around.
+	* 
+	*	@arg {int} start - Smallest tick label of axis.
+	*	@arg {int} finish - Largest tick label of axis.
+	*	@arg {int} step - Interval between successive ticks.
+	*	@arg {float} extension - Distance (in user-units) to extend axis beyond end-most ticks.
+	*	@returns {Axis} - Axis (subclass of Phy.Group) corresponding to the axis.
+	*/
+	makeYAxis(start, finish, step = 1, extension = 0.5) {
+
+		var center = (start + finish) / 2;		// Calculate the tick label of the center of the axis based on specified start and finish.
+												// To make sure that the entire axis is centered on the scene we have to shift all positions by this amount
+
+		// 'start - center' shifts 'start' such that the created axis is centered on the center of the scene.
+		var absStart = start - center - extension;
+		var absFinish = finish - center + extension;
+
+		var axis = new Axis();			// create empty Axis (essentially a Two.Group)
+
+		axis.add(this.makeLine(0, absStart, 0, absFinish));			// Create main vertical line
+		
+		// Add arrow head
+		var arrowHead = this.makeArrowHead();
+		arrowHead.yshift(absFinish);
+		arrowHead.rotation = - Math.PI / 2;
+		axis.add(arrowHead);
+
+		for (var i = start; i <= finish; i += step) {
+
+			var tick = this.makeHLine(0, i - center, 0.3);
+			var label = this.makeText(i, -0.4, i - center);
+
+			axis.add(tick);
+			axis.add(label);
+
+			if (i == 0) {						// If there is a zero-tick we store the tick and label so we can remove it later if required
+				axis.declareZero(tick, label);
+			}
+		}
 
 		axis.linewidth = 1.5;
 
