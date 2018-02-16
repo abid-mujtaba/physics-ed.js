@@ -230,6 +230,13 @@ class Phy extends Two {
 		// Translate scene so that its (0,0) matches with center of screen
 		this.scene.translation.set( param['sceneWidth'] / 2, param['sceneHeight'] / 2);
 	}
+
+
+	makeRectangle(x, y, width, height) {
+
+		var U = this.units;			// The Units object that converts from user-units to pixels
+		return super.makeRectangle(U.px(x), U.py(y), U.px(width), U.px(height));		// Convert from user-units to pixel before calling the corresponding superclass method
+	}
 }
 
 
