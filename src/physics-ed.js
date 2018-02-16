@@ -299,16 +299,15 @@ class Phy extends Two {
 
 
 	/**
-	*	Make the x-axis (Two.Group) and add it to the PHy object.
+	*	Make the x-axis (Axis <- Phy.Group) and add it to the Phy object.
 	*
 	*	The center of the drawn line is at the center of the screen (0,0) regardless of where the 0 value of the axis might be. Use 'translate' to move the created group around.
-	*  Assumes that initScene() and new Dimensions() has been called.
 	* 
 	*	@arg {int} start - Smallest tick label of axis.
 	*	@arg {int} finish - Largest tick label of axis.
 	*	@arg {int} step - Interval between successive ticks.
 	*	@arg {float} extension - Distance (in user-units) to extend axis beyond end-most ticks.
-	*	@returns {Two.Group} - Axis (subclass of Two.Group) corresponding to the axis.
+	*	@returns {Axis} - Axis (subclass of Phy.Group) corresponding to the axis.
 	*/
 	makeXAxis(start, finish, step = 1, extension = 0.5) {
 
@@ -328,16 +327,25 @@ class Phy extends Two {
 		arrowHead.xshift(absFinish);
 		axis.add(arrowHead);
 
-		//axis.tickLabels = [];
+		for (var i = start; i <= finish; i += step) {
 
-		//for (var i = start; i <= finish; i += step) {
+			var tick = this.makeVLine(i - center, 0, 0.3);
+			var label = this.makeText(i, i - center, -0.4);
 
-			//var tick = new Two.Line(dims.px((i - center) * spacing), au.py(-0.15), dims.px((i - center) * spacing), au.py(0.15));
-			//var label = new Two.Text(i, dims.px((i - center) * spacing), au.py(-0.5));
+			axis.add(tick);
+			axis.add(label);
 
-			//axis.add(tick);
-			//axis.add(label);
-			//axis.tickLabels.push(label);		// Create a list of the tick labels to remove later if need be.
+			if (i == 0) {						// If there is a zero-tick we store the tick and label so we can remove it later if required
+				axis.declareZero(tick, label);
+			}
+		}
+
+		axis.linewidth = 1.5;
+
+		this.scene.add(axis);		// Automatically add the axis to the scene
+
+		return axis;			// 'make' functions are understood to automatically add the created object to the scene.
+	}
 
 			//if (i == 0) {						// If there is a zero-tick we store the tick and label so we can remove it later if required
 				//axis.declareZero(tick, label);
