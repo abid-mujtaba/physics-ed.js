@@ -274,6 +274,23 @@ class Phy extends Two {
 
 
 	/**
+	* Create an arrow-head centered at (0,0) and pointing to the right
+	* @arg {float} width - Both width and height of diagonal lines or arrow head measured in scale-units.
+	*/
+	makeArrowHead(width = 0.15) {
+		
+		var U = this.units;
+		var arrowHead = this.emptyGroup();			// Create new group which has knowledge of units
+
+		// Create arrow head with tip at (0,0) and pointing to the right (trailing back to the left)
+		arrowHead.add(this.makeLine(0,0, -width, width));
+		arrowHead.add(this.makeLine(0,0, -width, -width));
+
+		return arrowHead;
+	}
+
+
+	/**
 	*	Make the x-axis (Two.Group) and add it to the PHy object.
 	*
 	*	The center of the drawn line is at the center of the screen (0,0) regardless of where the 0 value of the axis might be. Use 'translate' to move the created group around.
@@ -299,9 +316,9 @@ class Phy extends Two {
 		axis.add(this.makeLine(absStart, 0, absFinish, 0));			// Create main horizontal line
 		
 		// Add arrow head
-		//var arrowHead = this.makeArrowHead();
-		//arrowHead.translation.set(absFinish, 0);
-		//axis.add(arrowHead);
+		var arrowHead = this.makeArrowHead();
+		arrowHead.xshift(absFinish);
+		axis.add(arrowHead);
 
 		//axis.tickLabels = [];
 
