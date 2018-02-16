@@ -22,8 +22,7 @@ function setupScene() {
 	var param = {sceneWidth: window.innerWidth, sceneHeight: window.innerHeight, width: 25};
 	var phy = new Phy(param).appendTo(elem);
 
-	phy.makeRectangle(0,1,12,4);
-	//phy.makeXAxis(-15, 8, 1).suppressZero();
+	phy.makeXAxis(-15, 8, 1).suppressZero();
 
 	// TODO Store scene-width and height in axis-units in the global object to use instead of arbitrary widths (300)
 	// Add x-axis	

@@ -262,6 +262,58 @@ class Phy extends Two {
 	}
 
 
+	/**
+	*	Make the x-axis (Two.Group) and add it to the PHy object.
+	*
+	*	The center of the drawn line is at the center of the screen (0,0) regardless of where the 0 value of the axis might be. Use 'translate' to move the created group around.
+	*  Assumes that initScene() and new Dimensions() has been called.
+	* 
+	*	@arg {int} start - Smallest tick label of axis.
+	*	@arg {int} finish - Largest tick label of axis.
+	*	@arg {int} step - Interval between successive ticks.
+	*	@arg {float} extension - Distance (in user-units) to extend axis beyond end-most ticks.
+	*	@returns {Two.Group} - Axis (subclass of Two.Group) corresponding to the axis.
+	*/
+	makeXAxis(start, finish, step = 1, extension = 0.5) {
+
+		var center = (start + finish) / 2;		// Calculate the tick label of the center of the axis based on specified start and finish.
+												// To make sure that the entire axis is centered on the scene we have to shift all positions by this amount
+
+		// 'start - center' shifts 'start' such that the created axis is centered on the center of the scene.
+		var absStart = start - center - extension;
+		var absFinish = finish - center + extension;
+
+		var axis = new Axis();			// create empty Axis (essentially a Two.Group)
+
+		axis.add(this.makeLine(absStart, 0, absFinish, 0));			// Create main horizontal line
+		
+		// Add arrow head
+		//var arrowHead = this.makeArrowHead();
+		//arrowHead.translation.set(absFinish, 0);
+		//axis.add(arrowHead);
+
+		//axis.tickLabels = [];
+
+		//for (var i = start; i <= finish; i += step) {
+
+			//var tick = new Two.Line(dims.px((i - center) * spacing), au.py(-0.15), dims.px((i - center) * spacing), au.py(0.15));
+			//var label = new Two.Text(i, dims.px((i - center) * spacing), au.py(-0.5));
+
+			//axis.add(tick);
+			//axis.add(label);
+			//axis.tickLabels.push(label);		// Create a list of the tick labels to remove later if need be.
+
+			//if (i == 0) {						// If there is a zero-tick we store the tick and label so we can remove it later if required
+				//axis.declareZero(tick, label);
+			//}
+		//}
+
+		axis.linewidth = 1.5;
+
+		this.scene.add(axis);		// Automatically add the axis to the scene
+
+		return axis;			// 'make' functions are understood to automatically add the created object to the scene.
+	}
 }
 
 
@@ -336,70 +388,6 @@ class Axis extends Two.Group {
 }
 
 
-/**
- *	Make the x-axis (Two.Group).
- *
- *	The center of the drawn line is at the center of the screen (0,0) regardless of where the 0 value of the axis might be. Use 'translate' to move the created group around.
- *  Assumes that initScene() and new Dimensions() has been called.
- * 
- *	@arg {int} start - Smallest tick label of axis.
- *	@arg {int} finish - Largest tick label of axis.
- *	@arg {int} step - Interval between successive ticks.
- *	@arg {float} width - Required total width of the axis in percent-units (see Dimensions). Ignored if spacing is unequal to zero.
- *	@arg {float} spacing - Length between successive integral ticks measured in percent-units.
- *	@arg {float} extension - Distance (in axis-units) to extend axis beyond end-most ticks (and specified width)
- *	@returns {Two.Group} - Axis (subclass of Two.Group) corresponding to the axis.
- */
-function makeXAxis(start, finish, step = 1, width = 100, spacing = 0, extension = 0.5) {
-
-	var dims = Two.dims;		// Get the Dimensions object stored 
-
-	if (spacing == 0)
-		spacing = width / (finish - start);
-
-	// Create axis units corresponding to this spacing
-	var au = new AxisUnits(dims.px(spacing));		// Create and store AxisUnits that will allow us to convert between axis units and actual pixels
-	Two.axisUnits = au;
-
-	var center = (start + finish) / 2;		// Calculate the tick label of the center of the axis based on specified start and finish.
-											// To make sure that the entire axis is centered on the scene we have to shift all positions by this amount
-
-	// Calculate the start and finish positions in absolute pixel values after incorporating the center of the axis, the spacing between ticks, and the extension
-	// 'start - center' shifts 'start' such that the created axis is centered on the center of the scene.
-	var absStart = dims.px( (start - center) * spacing ) - au.px(extension);
-	var absFinish = dims.px( (finish - center) * spacing ) + au.px(extension);
-
-	var axis = new Axis();			// create empty Axis (essentially a Two.Group)
-
-	axis.add(new Two.Line(absStart, 0, absFinish, 0));		// Create main horizontal line
-	
-	// Add arrow head
-	var arrowHead = makeArrowHead();
-	arrowHead.translation.set(absFinish, 0);
-	axis.add(arrowHead);
-
-	axis.tickLabels = [];
-
-	for (var i = start; i <= finish; i += step) {
-
-		var tick = new Two.Line(dims.px((i - center) * spacing), au.py(-0.15), dims.px((i - center) * spacing), au.py(0.15));
-		var label = new Two.Text(i, dims.px((i - center) * spacing), au.py(-0.5));
-
-		axis.add(tick);
-		axis.add(label);
-		axis.tickLabels.push(label);		// Create a list of the tick labels to remove later if need be.
-
-		if (i == 0) {						// If there is a zero-tick we store the tick and label so we can remove it later if required
-			axis.declareZero(tick, label);
-		}
-	}
-
-
-	axis.spacing = spacing;									// Store the spacing (measuring in percent-units
-	axis.linewidth = 1.5;
-
-	return axis;
-}
 
 
 /**
