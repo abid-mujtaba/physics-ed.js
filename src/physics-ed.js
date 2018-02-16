@@ -237,6 +237,31 @@ class Phy extends Two {
 		var U = this.units;			// The Units object that converts from user-units to pixels
 		return super.makeRectangle(U.px(x), U.py(y), U.px(width), U.px(height));		// Convert from user-units to pixel before calling the corresponding superclass method
 	}
+
+
+	makeLine(x1, y1, x2, y2) {
+
+		var U = this.units;
+		return super.makeLine(U.px(x1), U.py(y1), U.px(x2), U.py(y2));
+	}
+
+
+	/** Create a Horizontal Line **centered** on (x0, y0) with specified 'width' */
+	makeHLine(x0, y0, width) {
+	
+		width /= 2;
+		return makeLine(x0 - width, y0, x0 + width, y0);	
+	}
+
+
+	/** Create a Vertical Line **centered** on (x0, y0) with specified 'height' */
+	makeVLine(x0, y0, height) {
+	
+		height /= 2;
+		return makeLine(x0, y0 - height, x0, y0 + height);	
+	}
+
+
 }
 
 
