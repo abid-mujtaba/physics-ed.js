@@ -103,15 +103,17 @@ class Phy extends Two {
 		super(param);
 
 
+		// Add modified inner classes
+		Phy.Group = Group;
+		Phy.Axis = Axis;
+		Phy.Units = Units;
+
+
 		// Construct the new units based on passed in values
-	    this.units = new Units(width, height, param['sceneWidth'], param['sceneHeight']);
+	    this.units = new Phy.Units(width, height, param['sceneWidth'], param['sceneHeight']);
 
 		// Translate scene so that its (0,0) matches with center of screen
 		this.scene.translation.set( param['sceneWidth'] / 2, param['sceneHeight'] / 2);
-
-
-		// Add modified inner classes
-		Phy.Group = Group;
 	}
 
 
@@ -186,7 +188,7 @@ class Phy extends Two {
 	*	@arg {int} finish - Largest tick label of axis.
 	*	@arg {int} step - Interval between successive ticks.
 	*	@arg {float} extension - Distance (in user-units) to extend axis beyond end-most ticks.
-	*	@returns {Axis} - Axis (subclass of Phy.Group) corresponding to the axis.
+	*	@returns {Phy.Axis} - Subclass of Phy.Group corresponding to the axis.
 	*/
 	makeXAxis(start, finish, step = 1, extension = 0.5) {
 
@@ -197,7 +199,7 @@ class Phy extends Two {
 		var absStart = start - center - extension;
 		var absFinish = finish - center + extension;
 
-		var axis = new Axis();			// create empty Axis (essentially a Two.Group)
+		var axis = new Phy.Axis();			// create empty Axis (essentially a Two.Group)
 
 		axis.add(this.makeLine(absStart, 0, absFinish, 0));			// Create main horizontal line
 		
@@ -236,7 +238,7 @@ class Phy extends Two {
 	*	@arg {int} finish - Largest tick label of axis.
 	*	@arg {int} step - Interval between successive ticks.
 	*	@arg {float} extension - Distance (in user-units) to extend axis beyond end-most ticks.
-	*	@returns {Axis} - Axis (subclass of Phy.Group) corresponding to the axis.
+	*	@returns {Phy.Axis} - Subclass of Phy.Group corresponding to the axis.
 	*/
 	makeYAxis(start, finish, step = 1, extension = 0.5) {
 
@@ -247,7 +249,7 @@ class Phy extends Two {
 		var absStart = start - center - extension;
 		var absFinish = finish - center + extension;
 
-		var axis = new Axis();			// create empty Axis (essentially a Two.Group)
+		var axis = new Phy.Axis();			// create empty Axis (essentially a Two.Group)
 
 		axis.add(this.makeLine(0, absStart, 0, absFinish));			// Create main vertical line
 		
@@ -306,13 +308,10 @@ class Group extends Two.Group {
 }
 
 
-
-
-// TODO Place Axis inside the Phy container.
 /**
- * xAxis and yAxis are instances of this subclass of Two.Group
+ * xAxis and yAxis are instances of this subclass of Phy.Group
  */
-class Axis extends Two.Group {
+class Axis extends Phy.Group {
 	
 	/**
 	 * Store handles to the Two-objects corresponding to the tick and label of the zero point on the axis.
@@ -335,27 +334,5 @@ class Axis extends Two.Group {
 		this.remove(this.zeroTick, this.zeroLabel);
 
 		return this;		// Return a handle to the object itselt so that one can chain with this method.
-	}
-
-	
-	// TODO extend core class of Two to incorporate xshift and yshift in all objects (which will incorporate it in to Two.Group automatically)
-	// TODO Add a shift(,) method that recursively calls xshift and yshift
-	/**
-	 * Shift the axis in the x-direction by amount 'delta'.
-	 * @arg {float} delta - Amount to shift axis in x-direction measured in scale-units.
-	 */
-	xshift(delta) {
-
-		this.translation._x += Two.axisUnits.px(delta);
-	}
-
-
-	/**
-	 * Shift the axis in the y-direction by amount 'delta'.
-	 * @arg {float} delta - Amount to shift axis in y-direction measured in scale-units.
-	 */
-	yshift(delta) {
-		
-		this.translation._y += Two.axisUnits.px(delta);
 	}
 }
