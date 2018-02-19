@@ -22,11 +22,20 @@ function setupScene() {
 	var param = {sceneWidth: window.innerWidth, sceneHeight: window.innerHeight, width: 25};
 	var phy = new Phy(param).appendTo(elem);
 
-	phy.makeXAxis(-15, 8, 1).yshift(-1);
+	phy.makeXAxis(-15, 8, 2, 0.5).suppressZero();
+	phy.makeYAxis(-6, 6, 1, 0.5).suppressZero();
+
+	// Create particle as a circle
+	var circle = phy.makeCircle(-11, 0, 0.15);
+	circle.fill = 'black';
 
 	// Render scene
 	phy.update();
 }
+
+
+/**
+ * Define a function that 
 
 
 /** Start the animation when the window finishes loading. */
