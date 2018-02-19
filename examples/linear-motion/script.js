@@ -28,10 +28,23 @@ function setupScene() {
 	var particle = phy.makeCircle(-15, 0, 0.15);
 	particle.fill = 'black';
 
+	// Set initial kinematic values
+	particle.x = -15;
+	particle.v = 0;
+	particle.a = 1;		// 2 units per second squared
+	particle.t = 0;
+
 	// Attach a function of time (associated with the first particle) to be called on each iteration
 	particle.update = function (t) {
 		
-		this.position(-15 + t, 0);
+		var dt = t - this.t;			// Use stored value of previous time to calculate small time interval 'dt'
+
+		this.x += this.v * dt;
+		this.v += this.a * dt;
+
+		this.position(this.x, 0);
+
+		this.t = t;			// Update previous value of time 
 	}
 
 
@@ -45,10 +58,6 @@ function setupScene() {
 	}
 
 	
-
-	// Speed up animation
-	phy.timeScale = 3;
-
 
 	// Add all objects that need to be animated to the list of objects to update
 	phy.addToUpdate(particle, particle2);
