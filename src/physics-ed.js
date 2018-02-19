@@ -192,22 +192,20 @@ class Phy extends Two {
 	/**
 	*	Make the x-axis (Axis <- Phy.Group) and add it to the Phy object.
 	*
-	*	The center of the drawn line is at the center of the screen (0,0) regardless of where the 0 value of the axis might be. Use 'translate' to move the created group around.
+	*	The axis is drawn 1:1 with the underlying units with its origin coinciding with the center of the screen. The scale factor is applied afterwards (without mvoving the origin, which should be done using xshift and yshift.
 	* 
 	*	@arg {int} start - Smallest tick label of axis.
 	*	@arg {int} finish - Largest tick label of axis.
 	*	@arg {int} step - Interval between successive ticks.
+	*	@arg {float} scale - Multiplicative factor by which to scale the axis.
 	*	@arg {float} extension - Distance (in user-units) to extend axis beyond end-most ticks.
 	*	@returns {Phy.Axis} - Subclass of Phy.Group corresponding to the axis.
 	*/
-	makeXAxis(start, finish, step = 1, extension = 0.5) {
-
-		var center = (start + finish) / 2;		// Calculate the tick label of the center of the axis based on specified start and finish.
-												// To make sure that the entire axis is centered on the scene we have to shift all positions by this amount
+	makeXAxis(start, finish, step = 1, scale = 1, extension = 0.5) {i
 
 		// 'start - center' shifts 'start' such that the created axis is centered on the center of the scene.
-		var absStart = start - center - extension;
-		var absFinish = finish - center + extension;
+		var absStart = scale * start - extension;
+		var absFinish = scale * finish + extension;
 
 		var axis = new Phy.Axis(this.units);			// create empty Axis (essentially a Two.Group)
 
@@ -220,8 +218,8 @@ class Phy extends Two {
 
 		for (var i = start; i <= finish; i += step) {
 
-			var tick = this.makeVLine(i - center, 0, 0.3);
-			var label = this.makeText(i, i - center, -0.4);
+			var tick = this.makeVLine(i * scale, 0, 0.3);
+			var label = this.makeText(i, i * scale, -0.4);
 
 			axis.add(tick);
 			axis.add(label);
@@ -242,22 +240,19 @@ class Phy extends Two {
 	/**
 	*	Make the y-axis (Axis <- Phy.Group) and add it to the Phy object.
 	*
-	*	The center of the drawn line is at the center of the screen (0,0) regardless of where the 0 value of the axis might be. Use 'translate' to move the created group around.
+	*	The axis is drawn 1:1 with the underlying units with its origin coinciding with the center of the screen. The scale factor is applied afterwards (without mvoving the origin, which should be done using xshift and yshift.
 	* 
 	*	@arg {int} start - Smallest tick label of axis.
 	*	@arg {int} finish - Largest tick label of axis.
 	*	@arg {int} step - Interval between successive ticks.
+	*	@arg {float} scale - Multiplicative factor by which to scale the axis.
 	*	@arg {float} extension - Distance (in user-units) to extend axis beyond end-most ticks.
 	*	@returns {Phy.Axis} - Subclass of Phy.Group corresponding to the axis.
 	*/
-	makeYAxis(start, finish, step = 1, extension = 0.5) {
+	makeYAxis(start, finish, step = 1, scale = 1, extension = 0.5) {
 
-		var center = (start + finish) / 2;		// Calculate the tick label of the center of the axis based on specified start and finish.
-												// To make sure that the entire axis is centered on the scene we have to shift all positions by this amount
-
-		// 'start - center' shifts 'start' such that the created axis is centered on the center of the scene.
-		var absStart = start - center - extension;
-		var absFinish = finish - center + extension;
+		var absStart = start * scale - extension;
+		var absFinish = finish * scale + extension;
 
 		var axis = new Phy.Axis(this.units);			// create empty Axis (essentially a Two.Group)
 
@@ -271,8 +266,8 @@ class Phy extends Two {
 
 		for (var i = start; i <= finish; i += step) {
 
-			var tick = this.makeHLine(0, i - center, 0.3);
-			var label = this.makeText(i, -0.4, i - center);
+			var tick = this.makeHLine(0, i * scale, 0.3);
+			var label = this.makeText(i, -0.4, i  * scale);
 
 			axis.add(tick);
 			axis.add(label);
