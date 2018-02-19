@@ -135,6 +135,26 @@ class Phy extends Two {
 	}
 
 
+	/**
+	 * Static method called to patch a Two object to give it additional properties and methods.
+	 */
+	patch(object) {
+
+		object.units = this.units;		// Provide internal access to the user-defined units being used
+
+		/**
+		 * Create a .position() method that uses user-units for specifying the position of the object.
+		 *
+		 * @arg {float} x - x-position of object in user-units.
+		 * @arg {float} y - y-position of object in user-units.
+		 */
+		object.position = function (x,y) {
+			
+			this.translation.set(this.units.px(x), this.units.py(y));		// Note: In the inner function 'this' refers to the object
+		}
+	}
+
+
 	emptyGroup() {
 		
 		var U = this.units;

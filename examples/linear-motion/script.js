@@ -26,20 +26,22 @@ function setupScene() {
 
 	// Create particle as a circle
 	var particle = phy.makeCircle(-15, 0, 0.15);
-	particle.fill = 'black';						// TODO: Add method .update to particle which is specified by user and called automatically
+	particle.fill = 'black';						// TODO: Add method .update to particle which is specified by user and called automatically. Time NOT framecount is passed to this method.
+	phy.patch(particle);
 
 
 	// Define the function that will be called when the scene is updated to create the animation.
 	function update(frameCount) {
 
 		var t = frameCount / 60.0;
-		particle.translation.set(phy.units.px(pos(t)), 0);		// TODO: Create method so units.px won't need to be called here.
+		particle.position(pos(t), 0);
 	}
 
 
 	// Bind update() to the 'update' event so that it is called automatically at 60 fps 
 	phy.bind('update', update);
 
+	//phy.addToUpdate(particle);
 	// Start animation
 	phy.play();
 }
