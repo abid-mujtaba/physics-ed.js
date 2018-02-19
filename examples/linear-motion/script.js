@@ -25,16 +25,35 @@ function setupScene() {
 	phy.makeXAxis(-15, 8, 1).yshift(-1);
 
 	// Create particle as a circle
-	var circle = phy.makeCircle(-15, 0, 0.15);
-	circle.fill = 'black';
+	var particle = phy.makeCircle(-15, 0, 0.15);
+	particle.fill = 'black';						// TODO: Add method .update to particle which is specified by user and called automatically
 
-	// Render scene
-	phy.update();
+
+	// Define the function that will be called when the scene is updated to create the animation.
+	function update(frameCount) {
+
+		var t = frameCount / 60.0;
+		particle.translation.set(phy.units.px(pos(t)), 0);		// TODO: Create method so units.px won't need to be called here.
+	}
+
+
+	// Bind update() to the 'update' event so that it is called automatically at 60 fps 
+	phy.bind('update', update);
+
+	// Start animation
+	phy.play();
 }
 
 
+
+
 /**
- * Define a function that 
+ * Define a function that gives the position of the particle as a function of time.
+ */
+function pos(t) {
+
+	return -15 + t;
+}
 
 
 /** Start the animation when the window finishes loading. */
