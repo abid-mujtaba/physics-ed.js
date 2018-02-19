@@ -36,11 +36,25 @@ function setupScene() {
 
 	// Attach a function of time (associated with the first particle) to be called on each iteration
 	particle.update = function (t) {
+
+		if (this.v < 0)		// Stopping condition
+			return;
+
+		// Define the acceleration of the particle as a function of time
+		function a(t) {
+
+			if (t < 2)
+				return 2;
+			else if (t < 5)
+				return 0;
+			else
+				return -4;
+		}
 		
 		var dt = t - this.t;			// Use stored value of previous time to calculate small time interval 'dt'
 
 		this.x += this.v * dt;
-		this.v += this.a * dt;
+		this.v += a(t) * dt;
 
 		this.position(this.x, 0);
 
