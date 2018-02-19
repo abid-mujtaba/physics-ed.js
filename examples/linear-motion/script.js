@@ -26,31 +26,33 @@ function setupScene() {
 
 	// Create particle as a circle
 	var particle = phy.makeCircle(-15, 0, 0.15);
-	particle.fill = 'black';						// TODO: Add method .update to particle which is specified by user and called automatically. Time NOT framecount is passed to this method.
+	particle.fill = 'black';
+
+	// Attach a function of time (associated with the first particle) to be called on each iteration
+	particle.update = function (t) {
+		
+		this.position(-15 + t, 0);
+	}
+
 
 	var particle2 = phy.makeCircle(8, 1, 0.15);
+	particle2.fill = 'blue';
+	particle2.stroke = null;
 
+	particle2.update = function(t) {
 
-
-	// Define the function that will be called when the scene is updated to create the animation.
-	function update(frameCount) {
-
-		var t = frameCount / 60.0;
-		particle.position(pos(t), 0);
+		this.position(8 - t, 1);
 	}
 
-	function update2(frameCount) {
+	
 
-		var t = frameCount / 60.0;
-		particle2.position(8 - pos(t), 0);
-	}
+	// Speed up animation
+	phy.timeScale = 3;
 
 
-	// Bind update() to the 'update' event so that it is called automatically at 60 fps 
-	phy.bind('update', update);
-	phy.bind('update', update2);
-
+	// Add all objects that need to be animated to the list of objects to update
 	phy.addToUpdate(particle, particle2);
+
 	// Start animation
 	phy.play();
 }

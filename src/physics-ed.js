@@ -135,6 +135,10 @@ class Phy extends Two {
 
 		// Create empty list of objects to be updated
 		this.objectsToUpdate = [];
+
+
+		this.fps = param['fps'] || 60;			// FPS of animation, used to convert frameCount to time.
+		this.timeScale = 1;						// Factor by which time evolution is scaled. Used to slow down or speed up an animation.
 	}
 
 
@@ -173,6 +177,26 @@ class Phy extends Two {
 			this.patch(object);						// Any object that is going to be updated will be patched first.
 			this.objectsToUpdate.push(object);
 		}
+	}
+
+
+	/**
+	 * Modify .play() to bind object .update functions for animation
+	 */
+	play() {
+
+		// Carry out setup of object animation before calling the superclass method
+		this.bind('update', function (frameCount) {			// Execute this anonymous function when the 'update' event is triggered
+
+			var t = frameCount / this.fps * this.timeScale;		// Calculate current value of time based on frames past, fps and timescale.
+
+			for (var i = 0; i < this.objectsToUpdate.length; ++i)		// Iterate over all objects in the list
+				
+				this.objectsToUpdate[i].update(t);			// Run the .update() method of the object using the computed time
+		});
+
+
+		super.play();
 	}
 
 
