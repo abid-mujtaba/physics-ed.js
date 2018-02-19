@@ -124,10 +124,20 @@ class Phy extends Two {
 	}
 
 
+	/**
+	 * Define wrapped functions for making objects that convert from user-units to pixels using this.units before calling the superclass methods to carry out the acutal construction.
+	 */
 	makeRectangle(x, y, width, height) {
 
 		var U = this.units;			// The Units object that converts from user-units to pixels
 		return super.makeRectangle(U.px(x), U.py(y), U.px(width), U.px(height));		// Convert from user-units to pixel before calling the corresponding superclass method
+	}
+
+
+	makeCircle(ox, oy, r) {
+		
+		var U = this.units;
+		return super.makeCircle(U.px(ox), U.py(oy), U.px(r));
 	}
 
 
