@@ -199,7 +199,7 @@ class Phy extends Two {
 		var absStart = start - center - extension;
 		var absFinish = finish - center + extension;
 
-		var axis = new Phy.Axis();			// create empty Axis (essentially a Two.Group)
+		var axis = new Phy.Axis(this.units);			// create empty Axis (essentially a Two.Group)
 
 		axis.add(this.makeLine(absStart, 0, absFinish, 0));			// Create main horizontal line
 		
@@ -249,7 +249,7 @@ class Phy extends Two {
 		var absStart = start - center - extension;
 		var absFinish = finish - center + extension;
 
-		var axis = new Phy.Axis();			// create empty Axis (essentially a Two.Group)
+		var axis = new Phy.Axis(this.units);			// create empty Axis (essentially a Two.Group)
 
 		axis.add(this.makeLine(0, absStart, 0, absFinish));			// Create main vertical line
 		
@@ -311,7 +311,7 @@ class Group extends Two.Group {
 /**
  * xAxis and yAxis are instances of this subclass of Phy.Group
  */
-class Axis extends Phy.Group {
+class Axis extends Group {
 	
 	/**
 	 * Store handles to the Two-objects corresponding to the tick and label of the zero point on the axis.
