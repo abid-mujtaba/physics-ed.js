@@ -158,13 +158,21 @@ class Phy extends Two {
 	}
 
 
-	addToUpdate(object) {
+	/**
+	 * Add an object to the list of 
+	 */
+	addToUpdate(objects) {
 
-		if (this.objectsToUpdate.includes(object))		// Any object will only be added once
-			return;
+		for (var i = 0; i < arguments.length; ++i) {
 
-		this.patch(object);						// Any object that is going to be updated will be patched first.
-		this.objectsToUpdate.push(object);
+			var object = arguments[i];
+
+			if (this.objectsToUpdate.includes(object))		// Any object will only be added once
+				return;
+
+			this.patch(object);						// Any object that is going to be updated will be patched first.
+			this.objectsToUpdate.push(object);
+		}
 	}
 
 
