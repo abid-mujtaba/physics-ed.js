@@ -132,6 +132,9 @@ class Phy extends Two {
 
 		// Translate scene so that its (0,0) matches with center of screen
 		this.scene.translation.set( param['sceneWidth'] / 2, param['sceneHeight'] / 2);
+
+		// Create empty list of objects to be updated
+		this.objectsToUpdate = [];
 	}
 
 
@@ -152,6 +155,16 @@ class Phy extends Two {
 			
 			this.translation.set(this.units.px(x), this.units.py(y));		// Note: In the inner function 'this' refers to the object
 		}
+	}
+
+
+	addToUpdate(object) {
+
+		if (this.objectsToUpdate.includes(object))		// Any object will only be added once
+			return;
+
+		this.patch(object);						// Any object that is going to be updated will be patched first.
+		this.objectsToUpdate.push(object);
 	}
 
 
