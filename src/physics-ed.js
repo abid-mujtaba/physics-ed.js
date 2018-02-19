@@ -8,8 +8,10 @@ class Units {
 	 * @arg {float} height - ONLY used if width is undefined. If width is specified height is calculated automatically to preserve aspect ratio 1:1 between horizontal and vertical units. Height of the scene in units chosen by the user.
 	 * @arg {int} pixelWidth - Width of the scene in PIXELS.
 	 * @arg {int} pixelHeight - Height of the scene in PIXELS
+	 * @arg {float} originX - X position of origin (with respect to center of the screen) measured in user-units.
+	 * @arg {float} originY - Y position of origin (with respect to center of the screen) measured in user-units.
 	 */
-	constructor(width, height, pixelWidth, pixelHeight) {
+	constructor(width, height, pixelWidth, pixelHeight, originX, originY) {
 		
 		this.pixelWidth = pixelWidth;
 		this.pixelHeight = pixelHeight;
@@ -24,6 +26,9 @@ class Units {
 			this.pixelsPerUnit = pixelHeight / height;
 			this.width = pixelWidth / this.pixelsPerUnit;
 		}
+
+		this.deltaX = originX;
+		this.deltaY = originY;
 	}
 
 
@@ -35,7 +40,7 @@ class Units {
 	 */
 	px(units) {
 
-		return units * this.pixelsPerUnit;
+		return (units + this.deltaX) * this.pixelsPerUnit;
 	}
 
 
@@ -45,11 +50,21 @@ class Units {
 	 */
 	py(units) {
 
-		return - this.px(units);
+		return - (units + this.deltaY) * this.pixelsPerUnit;
 	}
 
+
 	/**
-	 * Convert length in pixels in to user units.
+	 * Convert user units to actual pixels WITHOUT considering any shift in the origin.
+	 */
+	abs(units) {
+
+		return units * this.pixelsPerUnit;
+	}
+
+
+	/**
+	 * Convert length in pixels in to user units WITHOUT considering any shift in the origin.
 	 *
 	 * @arg {float} pixels - Length in actual pixels.
 	 * @returns {float} - Length converted to user units.
@@ -88,12 +103,15 @@ class Phy extends Two {
 	    	width = 20;					// If neither is defined use the default value of 20.
 
 		
-		// Declare defaults for scene width and height
+		// Declare defaults for param fields
 	    param['sceneWidth'] = param['sceneWidth'] || 640;
 	    param['sceneHeight'] = param['sceneHeight'] || 480;
 
 		param['width'] = param['sceneWidth'];
 		param['height'] = param['sceneHeight'];
+
+		var originX = param['originX'] || 0;
+		var originY = param['originY'] || 0;
 
 
 		// Declare default for renderer type
@@ -110,7 +128,7 @@ class Phy extends Two {
 
 
 		// Construct the new units based on passed in values
-	    this.units = new Phy.Units(width, height, param['sceneWidth'], param['sceneHeight']);
+	    this.units = new Phy.Units(width, height, param['sceneWidth'], param['sceneHeight'], originX, originY);
 
 		// Translate scene so that its (0,0) matches with center of screen
 		this.scene.translation.set( param['sceneWidth'] / 2, param['sceneHeight'] / 2);
@@ -130,14 +148,14 @@ class Phy extends Two {
 	makeRectangle(x, y, width, height) {
 
 		var U = this.units;			// The Units object that converts from user-units to pixels
-		return super.makeRectangle(U.px(x), U.py(y), U.px(width), U.px(height));		// Convert from user-units to pixel before calling the corresponding superclass method
+		return super.makeRectangle(U.px(x), U.py(y), U.abs(width), U.abs(height));		// Convert from user-units to pixel before calling the corresponding superclass method
 	}
 
 
 	makeCircle(ox, oy, r) {
 		
 		var U = this.units;
-		return super.makeCircle(U.px(ox), U.py(oy), U.px(r));
+		return super.makeCircle(U.px(ox), U.py(oy), U.abs(r));
 	}
 
 
@@ -296,12 +314,12 @@ class Group extends Two.Group {
 	
 	xshift(delta) {
 
-		this.translation._x += this.units.px(delta);
+		this.translation._x += this.units.abs(delta);
 	}
 
 	yshift(delta) {
 		
-		this.translation._y += this.units.py(delta);
+		this.translation._y -= this.units.abs(delta);		// Note the minus sign since we are using Units.abs() but are moving in the y-direction
 	}
 
 

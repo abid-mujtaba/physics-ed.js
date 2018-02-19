@@ -19,14 +19,13 @@ function setupScene() {
 
 	var elem = document.getElementById('Scene');
 
-	var param = {sceneWidth: window.innerWidth, sceneHeight: window.innerHeight, width: 25};
+	var param = {sceneWidth: window.innerWidth, sceneHeight: window.innerHeight, width: 25, originX: 3.5};
 	var phy = new Phy(param).appendTo(elem);
 
-	phy.makeXAxis(-15, 8, 2, 0.5).suppressZero();
-	phy.makeYAxis(-6, 6, 1, 0.5).suppressZero();
+	phy.makeXAxis(-15, 8, 1).yshift(-1);
 
 	// Create particle as a circle
-	var circle = phy.makeCircle(-11, 0, 0.15);
+	var circle = phy.makeCircle(-15, 0, 0.15);
 	circle.fill = 'black';
 
 	// Render scene
