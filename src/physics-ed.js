@@ -137,9 +137,9 @@ class Phy extends Two {
 		this.objectsToUpdate = [];
 
 
+		this.time = 0;								// Internal count of time
 		this.fps = param['fps'] || 60;			// FPS of animation, used to convert frameCount to time.
 		this.timeScale = 1;						// Factor by which time evolution is scaled. Used to slow down or speed up an animation.
-		this.isPlaying = false;
 	}
 
 
@@ -191,11 +191,13 @@ class Phy extends Two {
 		// Carry out setup of object animation before calling the superclass method
 		this.bind('update', function (frameCount) {			// Execute this anonymous function when the 'update' event is triggered
 
-			var t = frameCount / this.fps * this.timeScale;		// Calculate current value of time based on frames past, fps and timescale.
+			// Update value of time by incrementing it using the time-scale and 1 / fps which equals the time-interval between frames.
+			this.time += this.timeScale / this.fps;
+			//var t = frameCount / this.fps * this.timeScale;		// Calculate current value of time based on frames past, fps and timescale.
 
 			for (var i = 0; i < this.objectsToUpdate.length; ++i)		// Iterate over all objects in the list
 				
-				this.objectsToUpdate[i].update(t);			// Run the .update() method of the object using the computed time
+				this.objectsToUpdate[i].update(this.time);			// Run the .update() method of the object using the computed time
 		});
 
 
@@ -208,6 +210,18 @@ class Phy extends Two {
 
 				case " ":		// Toggle Pause and Play
 					phy.playing = ! phy.playing;		// Toggle phy.playing which plays or pauses the animation
+					break;
+
+				case "f":		// Increase speed 
+					phy.timeScale *= 2;
+					break;
+
+				case "s":		// Decrease speed
+					phy.timeScale *= 0.5;
+					break;
+
+				case "r":		// Reverse direction of time
+					phy.timeScale *= -1;
 					break;
 			}
 		}
