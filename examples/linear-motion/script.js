@@ -71,10 +71,13 @@ function setupScene() {
 		this.position(8 - t, 1);
 	}
 
+
+	// Add time indicator text box
+	var txtTime = phy.makeTimeText(8,3);
 	
 
 	// Add all objects that need to be animated to the list of objects to update
-	phy.addToUpdate(particle, particle2);
+	phy.addToUpdate(particle, particle2, txtTime);
 
 	// Start animation
 	phy.play();

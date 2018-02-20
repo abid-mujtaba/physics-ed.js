@@ -182,6 +182,8 @@ class Phy extends Two {
 
 	/**
 	 * Modify .play() to bind object .update functions for animation
+	 * TODO: Add keyboard shortcuts for pause, play, speed up, slow down and possibly reverse.
+	 * TODO: Show time passing by.
 	 */
 	play() {
 
@@ -252,6 +254,27 @@ class Phy extends Two {
 		
 		var U = this.units;
 		return super.makeText(text, U.px(x), U.py(y), styles);
+	}
+
+
+	/** 
+	 * Add time indicator at the specified location
+	 *
+	 * @arg {float} x - x-position of time indicator in user-units
+	 * @arg {float} y - y-position of time indicator in user-units
+	 * @arg {} styles - Object accepted by the Two.makeText method
+	 */
+	makeTimeText(x, y, styles) {
+
+		var U = this.units;
+		var txt = super.makeText("", U.px(x), U.py(y), styles);
+
+		txt.update = function(t) {
+
+			txt.value = "t = " + Number(t).toFixed(1) + " sec";		// Update text in box to indicate time
+		}
+
+		return txt;
 	}
 
 
