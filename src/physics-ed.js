@@ -181,11 +181,11 @@ class Phy extends Two {
 
 
 	/**
-	 * Modify .play() to bind object .update functions for animation
+	 * Bind object .update functions for animation and set up keyboard controls.
+	 * MUST be called after objects have already been added to the list of objects to be updated
 	 * TODO: Add keyboard shortcuts for pause, play, speed up, slow down and possibly reverse.
-	 * TODO: Show time passing by.
 	 */
-	play() {
+	setupAnimation() {
 
 		// Carry out setup of object animation before calling the superclass method
 		this.bind('update', function (frameCount) {			// Execute this anonymous function when the 'update' event is triggered
@@ -198,7 +198,10 @@ class Phy extends Two {
 		});
 
 
-		super.play();
+		document.onkeypress = function (k) {
+			
+			console.log(k.key);
+		}
 	}
 
 
