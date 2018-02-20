@@ -139,6 +139,7 @@ class Phy extends Two {
 
 		this.fps = param['fps'] || 60;			// FPS of animation, used to convert frameCount to time.
 		this.timeScale = 1;						// Factor by which time evolution is scaled. Used to slow down or speed up an animation.
+		this.isPlaying = false;
 	}
 
 
@@ -198,9 +199,17 @@ class Phy extends Two {
 		});
 
 
+		var phy = this;		// Create handle for access in inner function.
+
+		// Attach a keypress event-listener function to the root document. This will allow us to control the animation.
 		document.onkeypress = function (k) {
 			
-			console.log(k.key);
+			switch (k.key) {
+
+				case " ":		// Toggle Pause and Play
+					phy.playing = ! phy.playing;		// Toggle phy.playing which plays or pauses the animation
+					break;
+			}
 		}
 	}
 

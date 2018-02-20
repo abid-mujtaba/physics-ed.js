@@ -83,8 +83,8 @@ function setupScene() {
 	// Setup animation
 	phy.setupAnimation();
 
-	// Start animation
-	phy.play();
+	// Render first frame but do NOT start animation.
+	phy.update();
 }
 
 
