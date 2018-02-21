@@ -307,6 +307,8 @@ class Phy extends Two {
 	/**
 	* Create an arrow-head centered at (0,0) and pointing to the right
 	* @arg {float} width - Both width and height of diagonal lines or arrow head measured in scale-units.
+	*
+	* TODO: Create an ArrowHead class and add ability to properly rotate (about the tip) to it.
 	*/
 	makeArrowHead(width = 0.15) {
 		
@@ -318,6 +320,22 @@ class Phy extends Two {
 		arrowHead.add(this.makeLine(0,0, -width, -width));
 
 		return arrowHead;
+	}
+
+
+	/**
+	 * Create an arrow at the specified tail-point with the specified x and y components.
+	 *
+	 * @arg {Two.Vector} tail - 2D vector position of tail of arrow.
+	 * @arg {Two.Vector} comp - 2D vector containing the components of the vector.
+	 */
+	makeArrow(tailX, tailY, compX, compY) {
+
+		var U = this.units;
+		var tail = new Two.Vector(tailX, tailY);
+		var comp = new Two.Vector(compX, compY);
+
+		return new Arrow(this, tail, comp);
 	}
 
 
@@ -471,5 +489,29 @@ class Axis extends Group {
 		this.remove(this.zeroTick, this.zeroLabel);
 
 		return this;		// Return a handle to the object itselt so that one can chain with this method.
+	}
+}
+
+
+/**
+ * Arrow that is positioned with respect to its tail and is specified using x and y components.
+ */
+class Arrow extends Group {
+
+	constructor(phy, tail, comp) {
+
+		super();
+
+		var angle = Math.atan2(comp.y, comp.x);
+
+		this.line = phy.makeLine(tail.x, tail.y, tail.x + comp.x, tail.y + comp.y);
+		this.arrowHead = phy.makeArrowHead();
+		//this.arrowHead.rotation = angle;
+		
+
+		this.add(this.line);
+		this.add(this.arrowHead);
+
+		phy.scene.add(this);
 	}
 }

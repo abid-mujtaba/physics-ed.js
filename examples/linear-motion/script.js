@@ -62,14 +62,8 @@ function setupScene() {
 	}
 
 
-	var particle2 = phy.makeCircle(8, 1, 0.15);
-	particle2.fill = 'blue';
-	particle2.stroke = null;
-
-	particle2.update = function(t) {
-
-		this.position(8 - t, 1);
-	}
+	// Create a horizontal arrow corresponding to the position of the particle.
+	phy.makeArrow(0,2,-15,0);
 
 
 	// Add time indicator text box
@@ -78,7 +72,7 @@ function setupScene() {
 
 
 	// Add all objects that need to be animated to the list of objects to update
-	phy.addToUpdate(particle, particle2, txtTime);
+	phy.addToUpdate(particle, txtTime);
 
 	// Setup animation
 	phy.setupAnimation();
