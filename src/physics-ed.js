@@ -307,17 +307,19 @@ class Phy extends Two {
 	/**
 	* Create an arrow-head centered at (0,0) and pointing to the right
 	* @arg {float} width - Both width and height of diagonal lines or arrow head measured in scale-units.
-	*
-	* TODO: Create an ArrowHead class and add ability to properly rotate (about the tip) to it.
 	*/
 	makeArrowHead(width = 0.15) {
 		
 		var U = this.units;
 		var arrowHead = this.emptyGroup();			// Create new group which has knowledge of units
 
-		// Create arrow head with tip at (0,0) and pointing to the right (trailing back to the left)
-		arrowHead.add(this.makeLine(0,0, -width, width));
-		arrowHead.add(this.makeLine(0,0, -width, -width));
+		// Create arrow head with tip at (0,0) of the SCENE and pointing to the right (trailing back to the left)
+		// This makes the "center" of the arrowHead at the tip and not the center of the scene.
+		arrowHead.add(new Two.Line(0,0, - U.abs(width), U.abs(width)));
+		arrowHead.add(new Two.Line(0,0, - U.abs(width), - U.abs(width)));
+
+		// Move the created arrowHead to the user-defined origin.
+		arrowHead.translation.set(U.px(0),0);
 
 		return arrowHead;
 	}
