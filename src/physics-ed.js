@@ -504,12 +504,21 @@ class Arrow extends Group {
 
 		super();
 
-		var angle = Math.atan2(comp.y, comp.x);
+		this.tail = tail;
+		this.comp = comp;
 
-		this.line = phy.makeLine(tail.x, tail.y, tail.x + comp.x, tail.y + comp.y);
+		var angle = Math.atan2(comp.y, comp.x);
+		var head = new Two.Vector();
+		head.add(tail, comp);
+
+		this.head = head;
+
+		this.line = phy.makeLine(tail.x, tail.y, head.x, head.y);
 		this.arrowHead = phy.makeArrowHead();
-		//this.arrowHead.rotation = angle;
-		
+		phy.patch(this.arrowHead);						// Patch to get access to .position() method
+
+		this.arrowHead.rotation = angle;
+		this.arrowHead.position(head.x, head.y);	
 
 		this.add(this.line);
 		this.add(this.arrowHead);
