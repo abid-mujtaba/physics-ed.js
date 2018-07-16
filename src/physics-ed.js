@@ -500,6 +500,11 @@ class Axis extends Group {
  */
 class Arrow extends Group {
 
+	/**
+	 * Create an arrow (line and arrow-head).
+	 * @arg {Two.Vector} tail - Position of tail of vector.
+	 * @arg {Two.Vector} comp - Components of the vector (to be appended to the tail).
+	 */
 	constructor(phy, tail, comp) {
 
 		super();
@@ -524,5 +529,24 @@ class Arrow extends Group {
 		this.add(this.arrowHead);
 
 		phy.scene.add(this);
+	}
+
+
+	/**
+	 * Change the position of the head of the vector without affecting its tail.
+	 * @arg {Float} x
+	 * @arg {Float} y
+	 */
+	updateHead(x, y) {
+
+		this.head = new Two.Vector(x, y);
+	    this.comp.sub(this.head, this.tail);	
+
+	    // TODO: Write separate Line class whose ends can be adjusted/updated with the correct units being used.
+	    // this.line = phy.makeLine(this.tail.x, this.tail,y, this.head.x, this.head.y);
+
+	    var angle = Math.atan2(this.comp.y, this.comp.x);
+	    this.arrowHead.rotation = angle;
+	    this.arrowHead.position(this.head.x, this.head.y);
 	}
 }

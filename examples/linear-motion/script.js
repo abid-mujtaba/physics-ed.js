@@ -34,6 +34,9 @@ function setupScene() {
 	particle.a = 1;		// 2 units per second squared
 	particle.t = 0;
 
+	// Create a horizontal arrow corresponding to the initial position of the particle.
+	var arrow = phy.makeArrow(0,2,-15,0);
+
 	// Attach a function of time (associated with the first particle) to be called on each iteration
 	particle.update = function (t) {
 
@@ -57,13 +60,11 @@ function setupScene() {
 		this.v += a(t) * dt;
 
 		this.position(this.x, 0);
+		arrow.updateHead(this.x, 2);	// Update the position of the head of the arrow
 
 		this.t = t;			// Update previous value of time 
 	}
 
-
-	// Create a horizontal arrow corresponding to the position of the particle.
-	phy.makeArrow(0,2,-15,0);
 
 
 	// Add time indicator text box
