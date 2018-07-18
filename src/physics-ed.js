@@ -127,6 +127,10 @@ class Phy extends Two {
 		Phy.Units = Units;
 
 
+		// Patch inner classes
+		Phy.patchLine();
+
+
 		// Construct the new units based on passed in values
 	    this.units = new Phy.Units(width, height, param['sceneWidth'], param['sceneHeight'], originX, originY);
 
@@ -160,6 +164,37 @@ class Phy extends Two {
 			
 			this.translation.set(this.units.px(x), this.units.py(y));		// Note: In the inner function 'this' refers to the object
 		}
+	}
+
+
+	/**
+	 * Static method called to patch Phy.Line to give it additional methods.
+	 */
+	static patchLine() {
+		/**
+		 * Change the head of the line to the specified coordinates.
+		 */
+		function head(x, y) {
+			// 'this' refers to the Line object
+			var h = this.vertices[1];	// The head is defined using the latter coordinates in makeLine so it is the 2nd vertex
+			var U = this.units;
+
+			// The Two.Line class readjusts the Line so that it has a build in translation which we have to account for when messing with the Line object's vertices directly i.e. the vertix position is given with respect to the objects global translation.
+
+			h.x = U.px(x) - this.translation.x;
+			h.y = U.py(y) - this.translation.y;
+		}
+
+		function tail(x,y) {
+			var t = this.verticles[0];
+			var U = this.units;
+
+			t.x = U.px(x) - this.translation.x;
+			t.y = U.py(y) - this.translation.y;
+		}
+
+		Phy.Line.prototype.head = head;
+		Phy.Line.prototype.tail = tail;
 	}
 
 
@@ -252,10 +287,16 @@ class Phy extends Two {
 	}
 
 
+	/**
+	 * This function assumes that the first pair represents the 'tail' and the latter pair the 'head' of the line.
+	 */
 	makeLine(x1, y1, x2, y2) {
 
 		var U = this.units;
-		return super.makeLine(U.px(x1), U.py(y1), U.px(x2), U.py(y2));
+		var line = super.makeLine(U.px(x1), U.py(y1), U.px(x2), U.py(y2));
+		this.patch(line);			// Gives access to the Units object for later use when updating the head.
+
+		return line
 	}
 
 
@@ -438,6 +479,7 @@ class Phy extends Two {
 }
 
 
+// TODO: Instead of changing Phy.Group this way alter the prototype to simply patch Phy.Group (and possibly Two.Group at the same time)
 class Group extends Two.Group {
 
 	constructor(units) {
@@ -534,19 +576,15 @@ class Arrow extends Group {
 
 	/**
 	 * Change the position of the head of the vector without affecting its tail.
-	 * @arg {Float} x
-	 * @arg {Float} y
 	 */
 	updateHead(x, y) {
 
 		this.head = new Two.Vector(x, y);
 	    this.comp.sub(this.head, this.tail);	
-
-	    // TODO: Write separate Line class whose ends can be adjusted/updated with the correct units being used.
-	    // this.line = phy.makeLine(this.tail.x, this.tail,y, this.head.x, this.head.y);
-
 	    var angle = Math.atan2(this.comp.y, this.comp.x);
+
+	    this.line.head(x, y);				// Patched method for Line object
 	    this.arrowHead.rotation = angle;
-	    this.arrowHead.position(this.head.x, this.head.y);
+	    this.arrowHead.position(x, y);
 	}
 }
