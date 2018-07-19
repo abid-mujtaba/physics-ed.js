@@ -121,7 +121,7 @@ class Phy extends Two {
 		super(param);
 
 		// Construct the new units based on passed in values
-	    this.units = new Phy.Units(width, height, param['sceneWidth'], param['sceneHeight'], originX, originY);
+	    this.units = new Units(width, height, param['sceneWidth'], param['sceneHeight'], originX, originY);
 
 
 		// Add modified inner classes
@@ -291,13 +291,6 @@ class Phy extends Two {
 	}
 
 
-	emptyGroup() {
-		
-		var U = this.units;
-		return new Phy.Group(U);
-	}
-
-
 	/**
 	 * Define wrapped functions for making objects that convert from user-units to pixels using this.units before calling the superclass methods to carry out the acutal construction.
 	 */
@@ -380,7 +373,7 @@ class Phy extends Two {
 	makeArrowHead(width = 0.15) {
 		
 		var U = this.units;
-		var arrowHead = this.emptyGroup();			// Create new group which has knowledge of units
+		var arrowHead = new Phy.Group();			// Create new group which has knowledge of units
 
 		// Create arrow head with tip at (0,0) of the SCENE and pointing to the right (trailing back to the left)
 		// This makes the "center" of the arrowHead at the tip and not the center of the scene.
@@ -505,34 +498,6 @@ class Phy extends Two {
 		return axis;			// 'make' functions are understood to automatically add the created object to the scene.
 	}
 }
-
-
-// TODO: Instead of changing Phy.Group this way alter the prototype to simply patch Phy.Group (and possibly Two.Group at the same time)
-// class Group extends Two.Group {
-//
-// 	constructor(units) {
-// 		super();
-//
-// 		this.units = units;
-// 	}
-// 	
-// 	xshift(delta) {
-//
-// 		this.translation._x += this.units.abs(delta);
-// 	}
-//
-// 	yshift(delta) {
-// 		
-// 		this.translation._y -= this.units.abs(delta);		// Note the minus sign since we are using Units.abs() but are moving in the y-direction
-// 	}
-//
-//
-// 	shift(xdelta, ydelta) {
-//
-// 		this.xshift(xdelta);
-// 		this.yshift(ydelta);
-// 	}
-// }
 
 
 /**
