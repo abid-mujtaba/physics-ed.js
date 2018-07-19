@@ -120,19 +120,18 @@ class Phy extends Two {
 		// Call the constructor of the superclass Two
 		super(param);
 
+		// Construct the new units based on passed in values
+	    this.units = new Phy.Units(width, height, param['sceneWidth'], param['sceneHeight'], originX, originY);
+
 
 		// Add modified inner classes
-		Phy.Group = Group;
 		Phy.Axis = Axis;
 		Phy.Units = Units;
 
-
 		// Patch inner classes
 		Phy.patchLine();
+		Phy.patchGroup(this.units);
 
-
-		// Construct the new units based on passed in values
-	    this.units = new Phy.Units(width, height, param['sceneWidth'], param['sceneHeight'], originX, originY);
 
 		// Translate scene so that its (0,0) matches with center of screen
 		this.scene.translation.set( param['sceneWidth'] / 2, param['sceneHeight'] / 2);
@@ -195,6 +194,35 @@ class Phy extends Two {
 
 		Phy.Line.prototype.head = head;
 		Phy.Line.prototype.tail = tail;
+	}
+
+
+	/**
+	 * Patch Phy.Group to add units and give it x and y shift methods using custom units.
+	 */
+	static patchGroup(units) {
+
+		Phy.Group.prototype.units = units;
+		
+		function xshift(delta) {
+
+			this.translation._x += units.abs(delta);
+		}
+
+		function yshift(delta) {
+			
+			this.translation._y -= units.abs(delta);		// Note the minus sign since we are using Units.abs() but are moving in the y-direction
+		}
+
+
+		function shift(xdelta, ydelta) {
+
+			this.xshift(xdelta);
+			this.yshift(ydelta);
+		}
+
+		Phy.Group.prototype.xshift = xshift;
+		Phy.Group.prototype.yshift = yshift;
 	}
 
 
@@ -480,37 +508,37 @@ class Phy extends Two {
 
 
 // TODO: Instead of changing Phy.Group this way alter the prototype to simply patch Phy.Group (and possibly Two.Group at the same time)
-class Group extends Two.Group {
-
-	constructor(units) {
-		super();
-
-		this.units = units;
-	}
-	
-	xshift(delta) {
-
-		this.translation._x += this.units.abs(delta);
-	}
-
-	yshift(delta) {
-		
-		this.translation._y -= this.units.abs(delta);		// Note the minus sign since we are using Units.abs() but are moving in the y-direction
-	}
-
-
-	shift(xdelta, ydelta) {
-
-		this.xshift(xdelta);
-		this.yshift(ydelta);
-	}
-}
+// class Group extends Two.Group {
+//
+// 	constructor(units) {
+// 		super();
+//
+// 		this.units = units;
+// 	}
+// 	
+// 	xshift(delta) {
+//
+// 		this.translation._x += this.units.abs(delta);
+// 	}
+//
+// 	yshift(delta) {
+// 		
+// 		this.translation._y -= this.units.abs(delta);		// Note the minus sign since we are using Units.abs() but are moving in the y-direction
+// 	}
+//
+//
+// 	shift(xdelta, ydelta) {
+//
+// 		this.xshift(xdelta);
+// 		this.yshift(ydelta);
+// 	}
+// }
 
 
 /**
  * xAxis and yAxis are instances of this subclass of Phy.Group
  */
-class Axis extends Group {
+class Axis extends Phy.Group {
 	
 	/**
 	 * Store handles to the Two-objects corresponding to the tick and label of the zero point on the axis.
@@ -540,7 +568,7 @@ class Axis extends Group {
 /**
  * Arrow that is positioned with respect to its tail and is specified using x and y components.
  */
-class Arrow extends Group {
+class Arrow extends Phy.Group {
 
 	/**
 	 * Create an arrow (line and arrow-head).
