@@ -40,9 +40,6 @@ function setupScene() {
 	// Attach a function of time (associated with the first particle) to be called on each iteration
 	particle.update = function (t) {
 
-		if (this.v < 0)		// Stopping condition
-			return;
-
 		// Define the acceleration of the particle as a function of time
 		function a(t) {
 
@@ -55,14 +52,16 @@ function setupScene() {
 		}
 		
 		var dt = t - this.t;			// Use stored value of previous time to calculate small time interval 'dt'
+		this.t = t;			// Update previous value of time 
 
 		this.x += this.v * dt;
 		this.v += a(t) * dt;
 
+		if (this.v < 0)		// Stopping condition so we don not update the position of the particle
+			return;
+
 		this.position(this.x, 0);
 		arrow.updateHead(this.x, 2);	// Update the position of the head of the arrow
-
-		this.t = t;			// Update previous value of time 
 	}
 
 
@@ -80,17 +79,6 @@ function setupScene() {
 
 	// Render first frame but do NOT start animation.
 	phy.update();
-}
-
-
-
-
-/**
- * Define a function that gives the position of the particle as a function of time.
- */
-function pos(t) {
-
-	return -15 + t;
 }
 
 
