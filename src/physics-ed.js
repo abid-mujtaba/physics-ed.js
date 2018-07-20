@@ -268,6 +268,10 @@ class Phy extends Two {
 
 		// Attach a keypress event-listener function to the root document. This will allow us to control the animation.
 		document.onkeypress = function (k) {
+
+			if (k.ctrlKey || k.altKey || k.shiftKey) {		// We are interested in unmodified keypress so if there is any modifier present we return true
+				return true;							    // A 'true' returned means the event was NOT digested and will be passed on for other listeners to process
+			}
 			
 			switch (k.key) {
 
@@ -286,7 +290,12 @@ class Phy extends Two {
 				case "r":		// Reverse direction of time
 					phy.timeScale *= -1;
 					break;
+
+				default:
+					return true;
 			}
+
+			return false;		// This indicates that the key-press has been digested (unavailable for other listeners down the stack)
 		}
 	}
 
