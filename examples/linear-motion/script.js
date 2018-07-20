@@ -35,7 +35,10 @@ function setupScene() {
 	particle.t = 0;
 
 	// Create a horizontal arrow corresponding to the initial position of the particle.
-	var arrow = phy.makeArrow(0,2,-15,0);
+	var xArrow = phy.makeArrow(0,2,particle.x,0);
+	var vArrow = phy.makeArrow(particle.x, 0, particle.v, 0);
+
+	// Create a horizontal arrow corresponding to the initial velocity of the particle
 
 	// Attach a function of time (associated with the first particle) to be called on each iteration
 	particle.update = function (t) {
@@ -61,7 +64,9 @@ function setupScene() {
 			return;
 
 		this.position(this.x, 0);
-		arrow.updateHead(this.x, 2);	// Update the position of the head of the arrow
+		xArrow.updateHead(this.x, 2);	// Update the position of the head of the arrow
+		vArrow.updateTail(this.x, 0);	// Update tail of the velocity arrow
+		vArrow.updateComp(this.v, 0);	// Update components of velocity arrow
 	}
 
 

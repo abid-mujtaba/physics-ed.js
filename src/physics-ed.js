@@ -185,7 +185,7 @@ class Phy extends Two {
 		}
 
 		function tail(x,y) {
-			var t = this.verticles[0];
+			var t = this.vertices[0];
 			var U = this.units;
 
 			t.x = U.px(x) - this.translation.x;
@@ -556,7 +556,7 @@ class Arrow extends Phy.Group {
 		this.tail = tail;
 		this.comp = comp;
 
-		var angle = Math.atan2(comp.y, comp.x);
+		this.angle = Math.atan2(comp.y, comp.x);
 		var head = new Two.Vector();
 		head.add(tail, comp);
 
@@ -566,7 +566,7 @@ class Arrow extends Phy.Group {
 		this.arrowHead = phy.makeArrowHead();
 		phy.patch(this.arrowHead);						// Patch to get access to .position() method
 
-		this.arrowHead.rotation = angle;
+		this.arrowHead.rotation = this.angle;
 		this.arrowHead.position(head.x, head.y);	
 
 		this.add(this.line);
@@ -577,16 +577,42 @@ class Arrow extends Phy.Group {
 
 
 	/**
-	 * Change the position of the head of the vector without affecting its tail.
+	 * Change the position of the head of the vector without affecting its tail (essentially changing its components and angle).
 	 */
 	updateHead(x, y) {
 
 		this.head = new Two.Vector(x, y);
 	    this.comp.sub(this.head, this.tail);	
-	    var angle = Math.atan2(this.comp.y, this.comp.x);
+	    this.angle = Math.atan2(this.comp.y, this.comp.x);
 
 	    this.line.head(x, y);				// Patched method for Line object
-	    this.arrowHead.rotation = angle;
+	    this.arrowHead.rotation = this.angle;
 	    this.arrowHead.position(x, y);
+	}
+
+	/**
+	 * Change the position of the tail of the vector without changing its components (hence angle) (essentially changing its head).
+	 */
+	updateTail(x,y) {
+	
+		this.tail = new Two.Vector(x,y);
+		this.head.add(this.tail, this.comp);
+
+		this.line.head(this.head.x, this.head.y);
+		this.line.tail(x,y);
+		this.arrowHead.position(this.head.x, this.head.y);
+	}
+
+
+	/**
+	 * Change the components of a vector without changing its tail (essentially changing its head).
+	 */
+	updateComp(x,y) {
+
+		this.comp = new Two.Vector(x,y);
+		this.head.add(this.tail, this.comp);
+
+		this.line.head(this.head.x, this.head.y);
+		this.arrowHead.position(this.head.x, this.head.y);
 	}
 }
